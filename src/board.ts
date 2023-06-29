@@ -1,5 +1,6 @@
 import Node from './node';
 import dfsAlgorithm from './dfs';
+import bfsAlgorithm from './bfs';
 
 class Board {
   private height: number;
@@ -133,6 +134,16 @@ class Board {
 
   startDfs() {
     const isSuccessful = dfsAlgorithm(
+      this.startId,
+      this.endId,
+      this.nodeMap,
+      this.nodesToAnimate
+    );
+    return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
+  }
+
+  startBfs() {
+    const isSuccessful = bfsAlgorithm(
       this.startId,
       this.endId,
       this.nodeMap,

@@ -1,7 +1,7 @@
 import { getNeighbours } from './helpers';
 import Node from './node';
 
-function dfsAlgorithm(
+function bfsAlgorithm(
   startId: string,
   endId: string,
   nodeMap: Map<string, Node>,
@@ -10,14 +10,14 @@ function dfsAlgorithm(
   const queue = [nodeMap.get(startId)];
 
   const visited: Map<string, boolean> = new Map();
+  visited.set(startId, true);
 
   while (queue.length > 0) {
-    const current = queue.pop();
+    const current = queue.shift();
     if (typeof current === 'undefined') {
       break;
     }
 
-    visited.set(current.id, true);
     nodesToAnimate.push(current);
 
     current.status = 'visited';
@@ -25,9 +25,10 @@ function dfsAlgorithm(
       return true;
     }
 
-    const neighbours = getNeighbours(current.id, nodeMap).reverse();
+    const neighbours = getNeighbours(current.id, nodeMap);
     for (const neighbour of neighbours) {
       if (!visited.has(neighbour.id)) {
+        visited.set(neighbour.id, true);
         queue.push(neighbour);
       }
     }
@@ -36,4 +37,4 @@ function dfsAlgorithm(
   return false;
 }
 
-export default dfsAlgorithm;
+export default bfsAlgorithm;

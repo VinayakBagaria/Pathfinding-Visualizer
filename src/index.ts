@@ -17,7 +17,7 @@ function executeSequence() {
     const text = visualizeButton.innerText;
     visualizeButton.innerText = 'Loading...';
 
-    const { isSuccessful, nodesToAnimate } = board.startDfs();
+    const { isSuccessful, nodesToAnimate } = board.startBfs();
 
     if (isSuccessful) {
       startAnimations(nodesToAnimate);
