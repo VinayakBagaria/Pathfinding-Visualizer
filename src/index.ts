@@ -13,18 +13,22 @@ function executeSequence() {
   const board = new Board(boardNode, height / 28, width / 28);
 
   visualizeButton.addEventListener('click', () => {
-    visualizeButton.classList.add('loading');
-    const text = visualizeButton.innerText;
-    visualizeButton.innerText = 'Loading...';
-
     const { isSuccessful, nodesToAnimate } = board.startBfs();
+    const buttonText = visualizeButton.innerText;
 
     if (isSuccessful) {
-      startAnimations(nodesToAnimate);
+      startAnimations(nodesToAnimate, animationIndex => {
+        if (animationIndex === 0) {
+          visualizeButton.classList.add('loading');
+          visualizeButton.innerText = 'Loading...';
+        } else if (animationIndex === nodesToAnimate.length - 1) {
+          visualizeButton.classList.remove('loading');
+          visualizeButton.innerText = buttonText;
+        }
+      });
+    } else {
+      alert("Can't find path");
     }
-
-    visualizeButton.classList.remove('loading');
-    visualizeButton.innerText = text;
   });
 }
 

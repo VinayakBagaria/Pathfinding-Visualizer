@@ -92,6 +92,8 @@ class Board {
         this.dragging.start = true;
       } else if (node.status === 'end') {
         this.dragging.end = true;
+      } else if (node.status === 'wall') {
+        this.changeNodeElement(element.id, 'unvisited');
       } else {
         this.isCreatingWall = true;
       }
@@ -99,7 +101,6 @@ class Board {
 
     this.boardNode.addEventListener('mouseup', () => {
       this.dragging = { start: false, end: false };
-      // this.clickPosition = { r: -1, c: -1 };
       this.isCreatingWall = false;
     });
 
@@ -133,20 +134,14 @@ class Board {
       return;
     }
 
-    if (
-      newStatus === 'wall' &&
-      (currentNode.status == 'start' || currentNode.status === 'end')
-    ) {
+    if (newStatus === 'wall' && ['start', 'end'].includes(currentNode.status)) {
       return;
     }
 
-    if (newStatus === 'wall') {
-      currentNode.status = currentNode.status === 'wall' ? 'unvisited' : 'wall';
-    } else {
-      currentNode.status = newStatus;
-    }
-
+    currentElement.classList.remove('unvisited');
+    currentElement.classList.remove('wall');
     currentElement.classList.add(newStatus);
+    currentNode.status = newStatus;
 
     if (newStatus === 'start') {
       this.startId = currentNode.id;

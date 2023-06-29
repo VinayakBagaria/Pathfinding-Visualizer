@@ -19,7 +19,10 @@ export function getNeighbours(currentId: string, nodeMap: Map<string, Node>) {
     const newY = y + combination[1];
 
     const neighbourNode = nodeMap.get(`${newX}-${newY}`);
-    if (typeof neighbourNode !== 'undefined') {
+    if (
+      typeof neighbourNode !== 'undefined' &&
+      neighbourNode.status !== 'wall'
+    ) {
       neighbours.push(neighbourNode);
     }
   }

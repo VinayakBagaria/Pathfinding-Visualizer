@@ -2,7 +2,11 @@ import Node from './node';
 
 const SPEED = 0;
 
-function startTimer(nodesToAnimate: Array<Node>, index: number) {
+function startTimer(
+  nodesToAnimate: Array<Node>,
+  index: number,
+  callback: (animationIndex: number) => void
+) {
   setTimeout(() => {
     const node = nodesToAnimate[index];
     const currentElement = document.getElementById(node.id);
@@ -21,12 +25,16 @@ function startTimer(nodesToAnimate: Array<Node>, index: number) {
       previousElement.classList.add('visited');
     }
 
-    startTimer(nodesToAnimate, index + 1);
+    callback(index);
+    startTimer(nodesToAnimate, index + 1, callback);
   }, SPEED);
 }
 
-function startAnimations(nodesToAnimate: Array<Node>) {
-  startTimer(nodesToAnimate, 0);
+function startAnimations(
+  nodesToAnimate: Array<Node>,
+  callback: (animationIndex: number) => void
+) {
+  startTimer(nodesToAnimate, 0, callback);
 }
 
 export default startAnimations;

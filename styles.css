@@ -117,7 +117,6 @@ button.loading {
   animation-duration: 0.3s;
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
-  border: 0 !important;
 }
 
 @keyframes wallAnimation {
@@ -128,5 +127,6 @@ button.loading {
   100% {
     transform: scale(1.0);
     background-color: rgb(12, 53, 71);
+    border-color: rgb(12, 53, 71) !important;
   }
 }
