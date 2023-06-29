@@ -12,7 +12,6 @@ function dfsAlgorithm(
 
   while (queue.length > 0) {
     const current = queue.pop();
-    console.log({ current });
     if (typeof current === 'undefined') {
       break;
     }

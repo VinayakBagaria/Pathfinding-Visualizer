@@ -5,20 +5,20 @@ const SPEED = 0;
 function startTimer(nodesToAnimate: Array<Node>, index: number) {
   setTimeout(() => {
     const node = nodesToAnimate[index];
-    const currentTag = document.getElementById(node.id);
-    if (!currentTag) {
+    const currentElement = document.getElementById(node.id);
+    if (!currentElement) {
       throw new Error('Unfound node');
     }
 
-    currentTag.classList.add('current');
+    currentElement.classList.add('current');
 
     if (index >= 1) {
       const previous = nodesToAnimate[index - 1];
-      const previousTag = document.getElementById(previous.id);
-      if (!previousTag) {
+      const previousElement = document.getElementById(previous.id);
+      if (!previousElement) {
         throw new Error('Unfound node');
       }
-      previousTag.classList.add('visited');
+      previousElement.classList.add('visited');
     }
 
     startTimer(nodesToAnimate, index + 1);

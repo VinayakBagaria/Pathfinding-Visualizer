@@ -15,6 +15,10 @@ class Board {
 
   private nodesToAnimate: Array<Node>;
 
+  private mouseState: 'down' | 'up';
+  private pressedNode: Node | null;
+  private previousNode: Node | null;
+
   constructor(private _height: number, private _width: number) {
     this.height = _height;
     this.width = _width;
@@ -35,7 +39,12 @@ class Board {
 
     this.nodesToAnimate = [];
 
+    this.mouseState = 'up';
+    this.pressedNode = null;
+    this.previousNode = null;
+
     this.createGrid();
+    this.addEventListeners();
   }
 
   private createGrid() {
@@ -71,6 +80,56 @@ class Board {
       boardNode.innerHTML = tableHtml;
     }
   }
+
+  private addEventListeners() {
+    for (let r = 0; r < this._height; r++) {
+      for (let c = 0; c < this.width; c++) {
+        const currentId = `${r}-${c}`;
+        const currentNode = this.nodeMap.get(currentId);
+        if (!currentNode) {
+          throw new Error('Unfound node');
+        }
+
+        const currentElement = document.getElementById(currentId);
+        if (!currentElement) {
+          throw new Error('Unfound node');
+        }
+
+        currentElement.onmousedown = () => {
+          this.mouseState = 'down';
+          if (currentNode.status === 'start' || currentNode.status === 'end') {
+            this.pressedNode = currentNode;
+          }
+        };
+
+        currentElement.onmouseup = () => {
+          this.mouseState = 'up';
+          if (!this.pressedNode) {
+            return;
+          }
+          if (this.pressedNode.status === 'start') {
+            this.startId = currentNode.id;
+          } else if (this.pressedNode.status === 'end') {
+            this.endId = currentNode.id;
+          }
+          this.pressedNode = null;
+        };
+
+        currentElement.onmouseenter = () => {
+          if (this.mouseState === 'down' && this.pressedNode) {
+          }
+        };
+
+        currentElement.onmouseleave = () => {
+          if (this.mouseState === 'down' && this.pressedNode) {
+            this.changeNodeType(currentNode, currentElement);
+          }
+        };
+      }
+    }
+  }
+
+  changeNodeType(currentNode: Node, currentElement: HTMLElement) {}
 
   startDfs() {
     const isSuccessful = dfsAlgorithm(

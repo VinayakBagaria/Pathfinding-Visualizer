@@ -19,8 +19,6 @@ function executeSequence() {
 
     const { isSuccessful, nodesToAnimate } = board.startDfs();
 
-    console.log(nodesToAnimate);
-
     if (isSuccessful) {
       startAnimations(nodesToAnimate);
     }
