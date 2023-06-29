@@ -1,8 +1,10 @@
 import Node from './node';
 import dfsAlgorithm from './dfs';
 import bfsAlgorithm from './bfs';
+import { NodeStatusType } from './types';
 
 class Board {
+  private boardNode: Element;
   private height: number;
   private width: number;
 
@@ -16,11 +18,11 @@ class Board {
 
   private nodesToAnimate: Array<Node>;
 
-  private mouseState: 'down' | 'up';
-  private pressedNode: Node | null;
-  private previousNode: Node | null;
+  private dragging: Record<'start' | 'end', boolean>;
+  private clickPosition: Record<'r' | 'c', number>;
 
-  constructor(private _height: number, private _width: number) {
+  constructor(_boardNode: Element, _height: number, _width: number) {
+    this.boardNode = _boardNode;
     this.height = _height;
     this.width = _width;
 
@@ -40,9 +42,8 @@ class Board {
 
     this.nodesToAnimate = [];
 
-    this.mouseState = 'up';
-    this.pressedNode = null;
-    this.previousNode = null;
+    this.dragging = { start: false, end: false };
+    this.clickPosition = { r: -1, c: -1 };
 
     this.createGrid();
     this.addEventListeners();
@@ -57,7 +58,7 @@ class Board {
 
       for (let c = 0; c < this.width; c++) {
         const nodeId = `${r}-${c}`;
-        let nodeStatus: 'start' | 'end' | 'unvisited' = 'unvisited';
+        let nodeStatus: NodeStatusType = 'unvisited';
         if (r == this.startCoords[0] && c == this.startCoords[1]) {
           nodeStatus = 'start';
           this.startId = nodeId;
@@ -67,7 +68,7 @@ class Board {
         }
         currentRow += `<td id=${nodeId} class=${nodeStatus}></td>`;
 
-        const node = new Node(nodeId, nodeStatus);
+        const node = new Node(r, c, nodeId, nodeStatus);
         this.nodeMap.set(nodeId, node);
         currentNodes.push(node);
       }
@@ -76,61 +77,77 @@ class Board {
       this.boardArray.push(currentNodes);
     }
 
-    const boardNode = document.getElementById('board');
-    if (boardNode !== null) {
-      boardNode.innerHTML = tableHtml;
-    }
+    this.boardNode.innerHTML = tableHtml;
   }
 
   private addEventListeners() {
-    for (let r = 0; r < this._height; r++) {
-      for (let c = 0; c < this.width; c++) {
-        const currentId = `${r}-${c}`;
-        const currentNode = this.nodeMap.get(currentId);
-        if (!currentNode) {
-          throw new Error('Unfound node');
-        }
+    this.boardNode.addEventListener('mousedown', event => {
+      const element = event.target as HTMLElement;
+      const node = this.nodeMap.get(element.id);
+      if (!node) {
+        return;
+      }
 
-        const currentElement = document.getElementById(currentId);
-        if (!currentElement) {
-          throw new Error('Unfound node');
-        }
+      if (node.status === 'start') {
+        this.dragging.start = true;
+      } else if (node.status === 'end') {
+        this.dragging.end = true;
+      } else {
+        this.clickPosition.r = node.r;
+        this.clickPosition.c = node.c;
+      }
+    });
 
-        currentElement.onmousedown = () => {
-          this.mouseState = 'down';
-          if (currentNode.status === 'start' || currentNode.status === 'end') {
-            this.pressedNode = currentNode;
-          }
-        };
+    this.boardNode.addEventListener('mouseup', () => {
+      this.dragging = { start: false, end: false };
+      this.clickPosition = { r: -1, c: -1 };
+    });
 
-        currentElement.onmouseup = () => {
-          this.mouseState = 'up';
-          if (!this.pressedNode) {
+    this.boardNode.addEventListener('mousemove', event => {
+      const element = event.target as HTMLElement;
+
+      if (this.dragging.start || this.dragging.end) {
+        if (this.dragging.start) {
+          if (element.id === this.endId) {
             return;
           }
-          if (this.pressedNode.status === 'start') {
-            this.startId = currentNode.id;
-          } else if (this.pressedNode.status === 'end') {
-            this.endId = currentNode.id;
+          this.changeNodeElement(this.startId, 'unvisited');
+          this.changeNodeElement(element.id, 'start');
+        } else if (this.dragging.end) {
+          if (element.id === this.startId) {
+            return;
           }
-          this.pressedNode = null;
-        };
-
-        currentElement.onmouseenter = () => {
-          if (this.mouseState === 'down' && this.pressedNode) {
-          }
-        };
-
-        currentElement.onmouseleave = () => {
-          if (this.mouseState === 'down' && this.pressedNode) {
-            this.changeNodeType(currentNode, currentElement);
-          }
-        };
+          this.changeNodeElement(this.endId, 'unvisited');
+          this.changeNodeElement(element.id, 'end');
+        }
+      } else {
       }
-    }
+    });
   }
 
-  changeNodeType(currentNode: Node, currentElement: HTMLElement) {}
+  changeNodeElement(nodeId: string, newStatus: NodeStatusType) {
+    const currentNode = this.nodeMap.get(nodeId);
+    const currentElement = document.getElementById(nodeId);
+    if (!currentNode || !currentElement) {
+      return;
+    }
+
+    currentNode.status = newStatus;
+    currentElement.classList.add(newStatus);
+
+    if (newStatus === 'start') {
+      this.startId = currentNode.id;
+      return;
+    }
+
+    if (newStatus === 'end') {
+      this.endId = currentNode.id;
+      return;
+    }
+
+    currentElement.classList.remove('start');
+    currentElement.classList.remove('end');
+  }
 
   startDfs() {
     const isSuccessful = dfsAlgorithm(
