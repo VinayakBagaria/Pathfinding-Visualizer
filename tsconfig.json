@@ -10,6 +10,6 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "strict": true,
-        "sourceMap": true
+        "sourceMap": false
     }
 }

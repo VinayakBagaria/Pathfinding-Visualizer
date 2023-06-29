@@ -14,6 +14,9 @@ function dfsAlgorithm(
     if (typeof current === 'undefined') {
       break;
     }
+    if (visited.has(current.id)) {
+      continue;
+    }
 
     visited.set(current.id, true);
     current.status = 'visited';
@@ -23,7 +26,7 @@ function dfsAlgorithm(
 
     const neighbours = getNeighbours(current.id, nodeMap);
     for (const neighbour of neighbours) {
-      if (!visited.has(neighbour.id)) {
+      if (!visited.get(neighbour.id)) {
         queue.push(neighbour);
       }
     }

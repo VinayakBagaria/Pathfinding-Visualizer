@@ -69,7 +69,8 @@ class Board {
   }
 
   startDfs() {
-    dfsAlgorithm(this.startId, this.endId, this.nodeMap);
+    const isSuccessful = dfsAlgorithm(this.startId, this.endId, this.nodeMap);
+    console.log(isSuccessful);
   }
 }
 
