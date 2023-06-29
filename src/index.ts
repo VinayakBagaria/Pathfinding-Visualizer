@@ -10,9 +10,9 @@ function executeSequence() {
 
   const board = new Board(boardNode);
 
-  addButtonEvent('visualize', event => {
+  addIdEvent('visualize', event => {
     const element = event.target as HTMLElement;
-    const { isSuccessful, nodesToAnimate } = board.startBfs();
+    const { isSuccessful, nodesToAnimate } = board.start();
     const buttonText = element.innerText;
 
     if (isSuccessful) {
@@ -23,6 +23,8 @@ function executeSequence() {
         } else if (animationIndex === nodesToAnimate.length - 1) {
           element.classList.remove('loading');
           element.innerText = buttonText;
+
+          alert('Node is found!');
         }
       });
     } else {
@@ -30,21 +32,26 @@ function executeSequence() {
     }
   });
 
-  addButtonEvent('clear', () => {
+  addIdEvent('dfs-algorithm', () => {
+    board.setAlgorithm('dfs');
+  });
+
+  addIdEvent('bfs-algorithm', () => {
+    board.setAlgorithm('bfs');
+  });
+
+  addIdEvent('clear', () => {
     board.clearBoard();
   });
 }
 
-function addButtonEvent(
-  buttonId: string,
-  callback: (element: MouseEvent) => void
-) {
-  const buttonNode = document.getElementById(buttonId);
-  if (!buttonNode) {
+function addIdEvent(buttonId: string, callback: (element: MouseEvent) => void) {
+  const node = document.getElementById(buttonId);
+  if (!node) {
     return;
   }
 
-  buttonNode.addEventListener('click', callback);
+  node.addEventListener('click', callback);
 }
 
 executeSequence();

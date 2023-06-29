@@ -2,7 +2,7 @@ import Node from './node';
 import dfsAlgorithm from './dfs';
 import bfsAlgorithm from './bfs';
 import { createNodeId } from './helpers';
-import { NodeStatusType } from './types';
+import { AlgorithmType, NodeStatusType } from './types';
 
 class Board {
   private boardNode: Element;
@@ -21,6 +21,8 @@ class Board {
 
   private dragging: Record<'start' | 'end', boolean>;
   private isCreatingWall: boolean;
+
+  private algorithm: AlgorithmType;
 
   constructor(_boardNode: Element) {
     this.boardNode = _boardNode;
@@ -166,23 +168,29 @@ class Board {
     this.createGrid();
   }
 
-  startDfs() {
-    const isSuccessful = dfsAlgorithm(
-      this.startId,
-      this.endId,
-      this.nodeMap,
-      this.nodesToAnimate
-    );
-    return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
+  setAlgorithm(algorithm: AlgorithmType) {
+    this.algorithm = algorithm;
   }
 
-  startBfs() {
-    const isSuccessful = bfsAlgorithm(
-      this.startId,
-      this.endId,
-      this.nodeMap,
-      this.nodesToAnimate
-    );
+  start() {
+    let isSuccessful = false;
+    if (this.algorithm === 'dfs') {
+      isSuccessful = dfsAlgorithm(
+        this.startId,
+        this.endId,
+        this.nodeMap,
+        this.nodesToAnimate
+      );
+    } else if (this.algorithm === 'bfs') {
+      isSuccessful = bfsAlgorithm(
+        this.startId,
+        this.endId,
+        this.nodeMap,
+        this.nodesToAnimate
+      );
+    } else {
+      throw new Error(`Algorithm not implemented: ${this.algorithm}`);
+    }
     return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
   }
 }
