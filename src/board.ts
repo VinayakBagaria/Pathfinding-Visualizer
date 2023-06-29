@@ -19,7 +19,7 @@ class Board {
   private nodesToAnimate: Array<Node>;
 
   private dragging: Record<'start' | 'end', boolean>;
-  private clickPosition: Record<'r' | 'c', number>;
+  private isCreatingWall: boolean;
 
   constructor(_boardNode: Element, _height: number, _width: number) {
     this.boardNode = _boardNode;
@@ -43,7 +43,7 @@ class Board {
     this.nodesToAnimate = [];
 
     this.dragging = { start: false, end: false };
-    this.clickPosition = { r: -1, c: -1 };
+    this.isCreatingWall = false;
 
     this.createGrid();
     this.addEventListeners();
@@ -93,14 +93,14 @@ class Board {
       } else if (node.status === 'end') {
         this.dragging.end = true;
       } else {
-        this.clickPosition.r = node.r;
-        this.clickPosition.c = node.c;
+        this.isCreatingWall = true;
       }
     });
 
     this.boardNode.addEventListener('mouseup', () => {
       this.dragging = { start: false, end: false };
-      this.clickPosition = { r: -1, c: -1 };
+      // this.clickPosition = { r: -1, c: -1 };
+      this.isCreatingWall = false;
     });
 
     this.boardNode.addEventListener('mousemove', event => {
@@ -120,7 +120,8 @@ class Board {
           this.changeNodeElement(this.endId, 'unvisited');
           this.changeNodeElement(element.id, 'end');
         }
-      } else {
+      } else if (this.isCreatingWall) {
+        this.changeNodeElement(element.id, 'wall');
       }
     });
   }
@@ -132,7 +133,19 @@ class Board {
       return;
     }
 
-    currentNode.status = newStatus;
+    if (
+      newStatus === 'wall' &&
+      (currentNode.status == 'start' || currentNode.status === 'end')
+    ) {
+      return;
+    }
+
+    if (newStatus === 'wall') {
+      currentNode.status = currentNode.status === 'wall' ? 'unvisited' : 'wall';
+    } else {
+      currentNode.status = newStatus;
+    }
+
     currentElement.classList.add(newStatus);
 
     if (newStatus === 'start') {

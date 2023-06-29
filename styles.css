@@ -111,3 +111,22 @@ button.loading {
     background-color: rgba(0, 190, 218, 0.75);
   }
 }
+
+.wall {
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  border: 0 !important;
+}
+
+@keyframes wallAnimation {
+  0% {
+    transform: scale(0.2);
+    background-color: rgb(12, 53, 71);
+  }
+  100% {
+    transform: scale(1.0);
+    background-color: rgb(12, 53, 71);
+  }
+}
