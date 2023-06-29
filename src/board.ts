@@ -13,6 +13,8 @@ class Board {
   private nodeMap: Map<string, Node>;
   private boardArray: Array<Array<Node>>;
 
+  private nodesToAnimate: Array<Node>;
+
   constructor(private _height: number, private _width: number) {
     this.height = _height;
     this.width = _width;
@@ -30,6 +32,8 @@ class Board {
 
     this.nodeMap = new Map();
     this.boardArray = [];
+
+    this.nodesToAnimate = [];
 
     this.createGrid();
   }
@@ -69,8 +73,13 @@ class Board {
   }
 
   startDfs() {
-    const isSuccessful = dfsAlgorithm(this.startId, this.endId, this.nodeMap);
-    console.log(isSuccessful);
+    const isSuccessful = dfsAlgorithm(
+      this.startId,
+      this.endId,
+      this.nodeMap,
+      this.nodesToAnimate
+    );
+    return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
   }
 }
 

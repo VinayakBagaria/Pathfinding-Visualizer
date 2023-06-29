@@ -3,22 +3,23 @@ import Node from './node';
 function dfsAlgorithm(
   startId: string,
   endId: string,
-  nodeMap: Map<string, Node>
+  nodeMap: Map<string, Node>,
+  nodesToAnimate: Array<Node>
 ) {
   const queue = [nodeMap.get(startId)];
 
   const visited: Map<string, boolean> = new Map();
 
   while (queue.length > 0) {
-    const current = queue.shift();
+    const current = queue.pop();
+    console.log({ current });
     if (typeof current === 'undefined') {
       break;
     }
-    if (visited.has(current.id)) {
-      continue;
-    }
 
     visited.set(current.id, true);
+    nodesToAnimate.push(current);
+
     current.status = 'visited';
     if (current.id === endId) {
       return true;
@@ -26,7 +27,7 @@ function dfsAlgorithm(
 
     const neighbours = getNeighbours(current.id, nodeMap);
     for (const neighbour of neighbours) {
-      if (!visited.get(neighbour.id)) {
+      if (!visited.has(neighbour.id)) {
         queue.push(neighbour);
       }
     }
@@ -43,10 +44,10 @@ function getNeighbours(currentId: string, nodeMap: Map<string, Node>) {
   const neighbours: Array<Node> = [];
 
   const combinations = [
-    [0, -1],
+    [-1, 0],
     [0, 1],
     [1, 0],
-    [-1, 0],
+    [0, -1],
   ];
 
   for (const combination of combinations) {
@@ -55,7 +56,7 @@ function getNeighbours(currentId: string, nodeMap: Map<string, Node>) {
 
     const neighbourNode = nodeMap.get(`${newX}-${newY}`);
     if (typeof neighbourNode !== 'undefined') {
-      neighbours.push(neighbourNode);
+      neighbours.unshift(neighbourNode);
     }
   }
 

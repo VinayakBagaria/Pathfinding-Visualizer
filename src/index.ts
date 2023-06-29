@@ -1,3 +1,4 @@
+import startAnimations from './animate';
 import Board from './board';
 
 function executeSequence() {
@@ -16,12 +17,16 @@ function executeSequence() {
     const text = visualizeButton.innerText;
     visualizeButton.innerText = 'Loading...';
 
-    board.startDfs();
+    const { isSuccessful, nodesToAnimate } = board.startDfs();
 
-    setTimeout(() => {
-      visualizeButton.classList.remove('loading');
-      visualizeButton.innerText = text;
-    }, 1000);
+    console.log(nodesToAnimate);
+
+    if (isSuccessful) {
+      startAnimations(nodesToAnimate);
+    }
+
+    visualizeButton.classList.remove('loading');
+    visualizeButton.innerText = text;
   });
 }
 
