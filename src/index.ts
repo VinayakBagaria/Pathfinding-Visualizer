@@ -3,33 +3,48 @@ import Board from './board';
 
 function executeSequence() {
   const boardNode = document.querySelector('#board');
-  const visualizeButton = document.getElementById('visualize');
 
-  if (!boardNode || !visualizeButton) {
+  if (!boardNode) {
     return;
   }
 
-  const { height, width } = boardNode.getBoundingClientRect();
-  const board = new Board(boardNode, height / 28, width / 28);
+  const board = new Board(boardNode);
 
-  visualizeButton.addEventListener('click', () => {
+  addButtonEvent('visualize', event => {
+    const element = event.target as HTMLElement;
     const { isSuccessful, nodesToAnimate } = board.startBfs();
-    const buttonText = visualizeButton.innerText;
+    const buttonText = element.innerText;
 
     if (isSuccessful) {
       startAnimations(nodesToAnimate, animationIndex => {
         if (animationIndex === 0) {
-          visualizeButton.classList.add('loading');
-          visualizeButton.innerText = 'Loading...';
+          element.classList.add('loading');
+          element.innerText = 'Loading...';
         } else if (animationIndex === nodesToAnimate.length - 1) {
-          visualizeButton.classList.remove('loading');
-          visualizeButton.innerText = buttonText;
+          element.classList.remove('loading');
+          element.innerText = buttonText;
         }
       });
     } else {
       alert("Can't find path");
     }
   });
+
+  addButtonEvent('clear', () => {
+    board.clearBoard();
+  });
+}
+
+function addButtonEvent(
+  buttonId: string,
+  callback: (element: MouseEvent) => void
+) {
+  const buttonNode = document.getElementById(buttonId);
+  if (!buttonNode) {
+    return;
+  }
+
+  buttonNode.addEventListener('click', callback);
 }
 
 executeSequence();

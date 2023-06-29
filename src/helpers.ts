@@ -1,5 +1,9 @@
 import Node from './node';
 
+export function createNodeId(r: number, c: number) {
+  return `${r}-${c}`;
+}
+
 export function getNeighbours(currentId: string, nodeMap: Map<string, Node>) {
   const coordinates = currentId.split('-');
   const x = parseInt(coordinates[0], 10);
@@ -18,7 +22,7 @@ export function getNeighbours(currentId: string, nodeMap: Map<string, Node>) {
     const newX = x + combination[0];
     const newY = y + combination[1];
 
-    const neighbourNode = nodeMap.get(`${newX}-${newY}`);
+    const neighbourNode = nodeMap.get(createNodeId(newX, newY));
     if (
       typeof neighbourNode !== 'undefined' &&
       neighbourNode.status !== 'wall'

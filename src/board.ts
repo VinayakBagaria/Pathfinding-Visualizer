@@ -1,6 +1,7 @@
 import Node from './node';
 import dfsAlgorithm from './dfs';
 import bfsAlgorithm from './bfs';
+import { createNodeId } from './helpers';
 import { NodeStatusType } from './types';
 
 class Board {
@@ -8,8 +9,8 @@ class Board {
   private height: number;
   private width: number;
 
-  private startCoords = [0, 0];
-  private endCoords = [0, 0];
+  private startCoords: [number, number];
+  private endCoords: [number, number];
   private startId: string;
   private endId: string;
 
@@ -21,10 +22,24 @@ class Board {
   private dragging: Record<'start' | 'end', boolean>;
   private isCreatingWall: boolean;
 
-  constructor(_boardNode: Element, _height: number, _width: number) {
+  constructor(_boardNode: Element) {
     this.boardNode = _boardNode;
-    this.height = _height;
-    this.width = _width;
+
+    this.setInitialCoordinates();
+
+    this.boardArray = [];
+
+    this.dragging = { start: false, end: false };
+    this.isCreatingWall = false;
+
+    this.createGrid();
+    this.addEventListeners();
+  }
+
+  private setInitialCoordinates() {
+    const { height, width } = this.boardNode.getBoundingClientRect();
+    this.height = height / 28;
+    this.width = width / 28;
 
     this.startCoords = [
       Math.floor(this.height / 2),
@@ -34,22 +49,11 @@ class Board {
       Math.floor(this.height / 2),
       3 * Math.floor(this.width / 4),
     ];
-    this.startId = '';
-    this.endId = '';
-
-    this.nodeMap = new Map();
-    this.boardArray = [];
-
-    this.nodesToAnimate = [];
-
-    this.dragging = { start: false, end: false };
-    this.isCreatingWall = false;
-
-    this.createGrid();
-    this.addEventListeners();
   }
 
   private createGrid() {
+    this.nodeMap = new Map();
+    this.nodesToAnimate = [];
     let tableHtml = '';
 
     for (let r = 0; r < this.height; r++) {
@@ -57,7 +61,7 @@ class Board {
       const currentNodes: Array<Node> = [];
 
       for (let c = 0; c < this.width; c++) {
-        const nodeId = `${r}-${c}`;
+        const nodeId = createNodeId(r, c);
         let nodeStatus: NodeStatusType = 'unvisited';
         if (r == this.startCoords[0] && c == this.startCoords[1]) {
           nodeStatus = 'start';
@@ -127,7 +131,7 @@ class Board {
     });
   }
 
-  changeNodeElement(nodeId: string, newStatus: NodeStatusType) {
+  private changeNodeElement(nodeId: string, newStatus: NodeStatusType) {
     const currentNode = this.nodeMap.get(nodeId);
     const currentElement = document.getElementById(nodeId);
     if (!currentNode || !currentElement) {
@@ -155,6 +159,11 @@ class Board {
 
     currentElement.classList.remove('start');
     currentElement.classList.remove('end');
+  }
+
+  clearBoard() {
+    this.setInitialCoordinates();
+    this.createGrid();
   }
 
   startDfs() {

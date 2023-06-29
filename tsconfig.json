@@ -10,6 +10,7 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "strict": true,
-        "sourceMap": false
+        "sourceMap": false,
+        "strictPropertyInitialization": false
     }
 }
