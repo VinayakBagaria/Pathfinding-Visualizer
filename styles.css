@@ -1,0 +1,50 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+  padding: 40px;
+}
+
+#board {
+  border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+}
+
+#board td {
+  height: 25px;
+  width: 25px;
+  border: 1px solid #8ab4f8;
+}
+
+.start,
+.end {
+  position: relative;
+}
+
+.start::after,
+.end::after {
+  content: '';
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  border-bottom: 2px solid red;
+}
+
+.start::after {
+  border-right: 2px solid red;
+  transform: rotate(-45deg) translate(50%, -10%);
+}
+
+.end::after {
+  border-left: 2px solid red;
+  transform: rotate(45deg) translate(20%, -70%);
+}
