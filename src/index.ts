@@ -10,7 +10,7 @@ function executeSequence() {
   }
 
   const { height, width } = boardNode.getBoundingClientRect();
-  const board = new Board(height / 25, width / 25);
+  const board = new Board(height / 28, width / 28);
 
   visualizeButton.addEventListener('click', () => {
     visualizeButton.classList.add('loading');
