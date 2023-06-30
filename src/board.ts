@@ -12,7 +12,7 @@ class Board {
   private startId: string;
   private endId: string;
 
-  private nodeMap: Map<string, Node>;
+  nodeMap: Map<string, Node>;
 
   private nodesToAnimate: Array<Node>;
 
@@ -135,6 +135,7 @@ class Board {
       return;
     }
 
+    currentElement.classList.remove('shortest-path');
     currentElement.classList.remove('visited');
     currentElement.classList.remove('current');
     currentElement.classList.remove('unvisited');
@@ -184,16 +185,16 @@ class Board {
 
   start(algorithm: AlgorithmType) {
     this.nodesToAnimate = [];
-    let isSuccessful = false;
+    let endNode: Node | null = null;
     if (algorithm === 'dfs') {
-      isSuccessful = dfsAlgorithm(
+      endNode = dfsAlgorithm(
         this.startId,
         this.endId,
         this.nodeMap,
         this.nodesToAnimate
       );
     } else if (algorithm === 'bfs') {
-      isSuccessful = bfsAlgorithm(
+      endNode = bfsAlgorithm(
         this.startId,
         this.endId,
         this.nodeMap,
@@ -202,7 +203,7 @@ class Board {
     } else {
       throw new Error(`Algorithm not implemented: ${algorithm}`);
     }
-    return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
+    return { endNode, nodesToAnimate: this.nodesToAnimate };
   }
 }
 

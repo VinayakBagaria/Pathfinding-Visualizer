@@ -1,6 +1,6 @@
 import Board from './board';
 import Timer from './timer';
-import startAnimations from './animate';
+import { startAllPathsAnimations, startShortestPathAnimation } from './animate';
 import showModal from './modal';
 import { NODE_MAPPING, SPEED_MAPPING } from './constants';
 import { AlgorithmType, SpeedType } from './types';
@@ -14,7 +14,7 @@ const playPauseButton = getNodes(NODE_MAPPING.playPauseButton)[0];
 class VisualizerState {
   algorithm: AlgorithmType;
   speed: SpeedType;
-  timers: Array<Timer>;
+  timers: Array<Timer> = [];
   hasStarted: boolean;
   isPlaying: boolean;
 
@@ -26,12 +26,8 @@ class VisualizerState {
     this.speed = speed;
   }
 
-  getTimeForSpeed() {
-    return SPEED_MAPPING[this.speed].time;
-  }
-
-  setTimers(_timers: Array<Timer>) {
-    this.timers = _timers;
+  appendTimers(_timers: Array<Timer>) {
+    this.timers = [...this.timers, ..._timers];
   }
 
   private clearTimers() {
@@ -103,11 +99,9 @@ function onIndexAnimated(
 
 function initializeButtonEvents() {
   addHtmlEvent([visualizeButton], () => {
-    const { isSuccessful, nodesToAnimate } = board.start(
-      visualizerState.algorithm
-    );
+    const { endNode, nodesToAnimate } = board.start(visualizerState.algorithm);
 
-    if (!isSuccessful) {
+    if (endNode === null) {
       showModal(
         'Error!',
         'Cannot find path to goal as we got blocked by walls. Kindly re-try.'
@@ -115,12 +109,24 @@ function initializeButtonEvents() {
       return;
     }
 
-    const timers = startAnimations(
+    const speed = visualizerState.speed;
+
+    const timers = startAllPathsAnimations(
       nodesToAnimate,
-      visualizerState.getTimeForSpeed(),
-      index => onIndexAnimated(index, nodesToAnimate)
+      speed,
+      animatedIndex => {
+        onIndexAnimated(animatedIndex, nodesToAnimate);
+        if (animatedIndex === nodesToAnimate.length - 1) {
+          const shortestTimers = startShortestPathAnimation(
+            endNode,
+            board.nodeMap,
+            speed
+          );
+          visualizerState.appendTimers(shortestTimers);
+        }
+      }
     );
-    visualizerState.setTimers(timers);
+    visualizerState.appendTimers(timers);
   });
 
   addHtmlEvent(getNodes('#clear-board'), () => {

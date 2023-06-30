@@ -6,7 +6,7 @@ function bfsAlgorithm(
   endId: string,
   nodeMap: Map<string, Node>,
   nodesToAnimate: Array<Node>
-) {
+): Node | null {
   const queue = [nodeMap.get(startId)];
 
   const visited: Map<string, boolean> = new Map();
@@ -22,19 +22,20 @@ function bfsAlgorithm(
 
     current.status = 'visited';
     if (current.id === endId) {
-      return true;
+      return current;
     }
 
     const neighbours = getNeighbours(current.id, nodeMap);
     for (const neighbour of neighbours) {
       if (!visited.has(neighbour.id)) {
         visited.set(neighbour.id, true);
+        neighbour.previous = current;
         queue.push(neighbour);
       }
     }
   }
 
-  return false;
+  return null;
 }
 
 export default bfsAlgorithm;

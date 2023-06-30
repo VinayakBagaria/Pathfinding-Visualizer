@@ -6,7 +6,7 @@ function dfsAlgorithm(
   endId: string,
   nodeMap: Map<string, Node>,
   nodesToAnimate: Array<Node>
-) {
+): Node | null {
   const queue = [nodeMap.get(startId)];
 
   const visited: Map<string, boolean> = new Map();
@@ -22,18 +22,19 @@ function dfsAlgorithm(
 
     current.status = 'visited';
     if (current.id === endId) {
-      return true;
+      return current;
     }
 
     const neighbours = getNeighbours(current.id, nodeMap).reverse();
     for (const neighbour of neighbours) {
       if (!visited.has(neighbour.id)) {
+        neighbour.previous = current;
         queue.push(neighbour);
       }
     }
   }
 
-  return false;
+  return null;
 }
 
 export default dfsAlgorithm;
