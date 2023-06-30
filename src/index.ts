@@ -45,12 +45,10 @@ function initializeButtonEvents() {
           } else if (animationIndex === nodesToAnimate.length - 1) {
             element.classList.remove('loading');
             element.innerText = buttonText;
-            alert('Node is found!');
           }
         }
       );
     } else {
-      alert("Can't find path");
     }
   });
 
