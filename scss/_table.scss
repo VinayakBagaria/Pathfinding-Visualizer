@@ -1,8 +1,13 @@
-#board {
-  border-collapse: collapse;
-  width: 80%;
+.table-container {
   flex: 1;
-  margin: 0 auto;
+  flex-direction: column;
+  padding: 4% 20%;
+}
+
+#board {
+  flex: 1;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 #board td {
