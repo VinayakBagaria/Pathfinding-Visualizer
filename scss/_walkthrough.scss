@@ -1,6 +1,8 @@
 #walkthrough-overlay {
+  background-color: rgba(25, 25, 25, 0.4);
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.2s ease;
 
   &.open {
     opacity: 1;
@@ -18,8 +20,8 @@
   &::after {
     content: '';
     position: absolute;
-    top: -8px;
-    border-color: var(--primary-bg);
+    top: -7px;
+    border-color: #1a1e3e;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom-width: 8px;
