@@ -18,7 +18,7 @@ const visualizeButton = getNodeById(NODE_TO_ID_MAPPING.visualizeButton);
 const playPauseButton = getNodeById(NODE_TO_ID_MAPPING.playPauseButton);
 
 class VisualizerState {
-  algorithm: AlgorithmType;
+  algorithm: AlgorithmType | null = null;
   speed: SpeedType;
   timers: Array<Timer> = [];
   hasStarted: boolean;
@@ -105,6 +105,11 @@ function onIndexAnimated(
 
 function initializeButtonEvents() {
   addHtmlEvent(visualizeButton, () => {
+    if (visualizerState.algorithm === null) {
+      showModal('Error!', 'Choose an algorithm first from the dropdown.');
+      return;
+    }
+
     const { endNode, nodesToAnimate } = board.start(visualizerState.algorithm);
 
     if (endNode === null) {
