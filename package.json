@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --watch"
+    "build:css": "node-sass -w -r -o styles/ scss/",
+    "watch": "webpack --watch",
+    "start": "npm run watch & npm run build:css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "node-sass": "^9.0.0",
+    "sass": "^1.63.6",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",

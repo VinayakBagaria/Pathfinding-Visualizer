@@ -2,42 +2,69 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Path Finding Visualization</title>
-    <link rel="stylesheet" href="./styles.css" type="text/css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
-        integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
-        crossorigin="anonymous"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pathfinding Visualizer</title>
+    <link rel="stylesheet" href="./styles/main.css" type="text/css" />
+    <link rel="stylesheet"
+        href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Algorithms
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" id="dfs-algorithm">DFS</a></li>
-            <li><a class="dropdown-item" href="#" id="bfs-algorithm">BFS</a></li>
-        </ul>
-    </div>
+    <header>
+        <h1 class="heading-1">Pathfinding Visualizer</h1>
+        <div class="dropdown center" id="algorithms">
+            <div class="dropdown-controls">
+                Select Algorithm
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9.5L12 14.5L7 9.5" stroke="#2C3556" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item" id="dfs-algorithm">DFS</li>
+                <li class="dropdown-item" id="bfs-algorithm">BFS</li>
+            </ul>
+        </div>
 
-    <div class="actions-group">
-        <button type="button" class="btn btn-success btn-sm" id="visualize">Visualize</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" id="clear">Clear Board</button>
-    </div>
+        <button class="outlined center" id="visualize">
+            Visualize
+        </button>
+
+        <div class="dropdown center" id="speed">
+            <div class="dropdown-controls">
+                Speed
+            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9.5L12 14.5L7 9.5" stroke="#2C3556" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <ul class="dropdown-menu">
+                <li class="dropdown-item" id="fast-speed">Fast</li>
+                <li class="dropdown-item" id="average-speed">Average</li>
+                <li class="dropdown-item" id="slow-speed">Slow</li>
+            </ul>
+        </div>
+
+    </header>
+
+
+
+
+
+
+
 
     <table id="board"></table>
 
     <script src="./build/index.js"></script>
 
-
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 </body>
 
 </html>

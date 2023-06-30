@@ -7,6 +7,10 @@ function startTimer(
   index: number,
   callback: (animationIndex: number) => void
 ) {
+  if (index === nodesToAnimate.length) {
+    return;
+  }
+
   setTimeout(() => {
     const node = nodesToAnimate[index];
     const currentElement = document.getElementById(node.id);

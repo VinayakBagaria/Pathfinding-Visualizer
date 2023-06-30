@@ -2,7 +2,7 @@ import Node from './node';
 import dfsAlgorithm from './dfs';
 import bfsAlgorithm from './bfs';
 import { createNodeId } from './helpers';
-import { AlgorithmType, NodeStatusType } from './types';
+import { AlgorithmType, NodeStatusType, SpeedType } from './types';
 
 class Board {
   private boardNode: Element;
@@ -23,6 +23,7 @@ class Board {
   private isCreatingWall: boolean;
 
   private algorithm: AlgorithmType;
+  private speed: SpeedType;
 
   constructor(_boardNode: Element) {
     this.boardNode = _boardNode;
@@ -33,6 +34,8 @@ class Board {
 
     this.dragging = { start: false, end: false };
     this.isCreatingWall = false;
+
+    this.speed = 'fast';
 
     this.createGrid();
     this.addEventListeners();
@@ -170,6 +173,10 @@ class Board {
 
   setAlgorithm(algorithm: AlgorithmType) {
     this.algorithm = algorithm;
+  }
+
+  setSpeed(speed: SpeedType) {
+    this.speed = speed;
   }
 
   start() {
