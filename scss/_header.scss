@@ -12,7 +12,7 @@ header {
 
 .heading-1 {
   position: absolute;
-  left: 0;
+  left: var(--horizontal-padding);
   font-size: 20px;
   font-weight: 400;
   line-height: 26px;
