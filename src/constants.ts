@@ -1,4 +1,18 @@
-import { SpeedType } from './types';
+import { SpeedType, AlgorithmType } from './types';
+
+export const ALGORITHM_MAPPING: Record<
+  AlgorithmType,
+  { id: string; name: string }
+> = Object.freeze({
+  dfs: {
+    id: 'dfs-algorithm',
+    name: 'DFS',
+  },
+  bfs: {
+    id: 'bfs-algorithm',
+    name: 'BFS',
+  },
+});
 
 export const SPEED_MAPPING: Record<
   SpeedType,

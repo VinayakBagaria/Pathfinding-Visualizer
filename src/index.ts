@@ -1,9 +1,16 @@
 import Board from './board';
 import Timer from './timer';
-import { startAllPathsAnimations, startShortestPathAnimation } from './animate';
+import {
+  startVisitedNodesAnimations,
+  startShortestPathAnimation,
+} from './animate';
 import showModal from './modal';
 import { setUpWalkthrough, reInitiateWalkthrough } from './walkthrough';
-import { NODE_TO_ID_MAPPING, SPEED_MAPPING } from './constants';
+import {
+  NODE_TO_ID_MAPPING,
+  SPEED_MAPPING,
+  ALGORITHM_MAPPING,
+} from './constants';
 import { AlgorithmType, SpeedType } from './types';
 import {
   addHtmlEvent,
@@ -14,8 +21,12 @@ import {
 
 const boardNode = getNodeById(NODE_TO_ID_MAPPING.board);
 const board = new Board(boardNode);
-const visualizeButton = getNodeById(NODE_TO_ID_MAPPING.visualizeButton);
-const playPauseButton = getNodeById(NODE_TO_ID_MAPPING.playPauseButton);
+const visualizeButton = getNodeById(
+  NODE_TO_ID_MAPPING.visualizeButton
+) as HTMLButtonElement;
+const playPauseButton = getNodeById(
+  NODE_TO_ID_MAPPING.playPauseButton
+) as HTMLButtonElement;
 
 class VisualizerState {
   algorithm: AlgorithmType | null = null;
@@ -58,16 +69,12 @@ class VisualizerState {
       this.calculateNewDomState();
     }
 
-    if (visualizeButton instanceof HTMLButtonElement) {
-      visualizeButton.disabled = this.hasStarted;
-    }
+    visualizeButton.disabled = this.hasStarted;
   }
 
   private calculateNewDomState() {
     playPauseButton.innerText = this.isPlaying ? 'Pause' : 'Resume';
-    if (playPauseButton instanceof HTMLButtonElement) {
-      playPauseButton.disabled = !this.hasStarted;
-    }
+    playPauseButton.disabled = !this.hasStarted;
   }
 
   startOrStopTimer(newState: boolean) {
@@ -88,15 +95,16 @@ class VisualizerState {
 
 const visualizerState = new VisualizerState();
 
-function onIndexAnimated(
-  animatedIndex: number,
-  nodesToAnimate: Array<unknown>
-) {
+function onIndexAnimated(animatedIndex: number) {
   visualizerState.timers.shift();
   if (animatedIndex === 0) {
     visualizerState.setStarted(true);
     visualizerState.startOrStopTimer(true);
   }
+}
+
+function onPathAnimated(animatedIndex: number, nodesToAnimate: Array<unknown>) {
+  visualizerState.timers.shift();
   if (animatedIndex === nodesToAnimate.length - 1) {
     visualizerState.setStarted(false);
     visualizerState.startOrStopTimer(false);
@@ -106,7 +114,6 @@ function onIndexAnimated(
 function initializeButtonEvents() {
   addHtmlEvent(visualizeButton, () => {
     if (visualizerState.algorithm === null) {
-      showModal('Error!', 'Choose an algorithm first from the dropdown.');
       return;
     }
 
@@ -122,22 +129,24 @@ function initializeButtonEvents() {
 
     const speed = visualizerState.speed;
 
-    const timers = startAllPathsAnimations(
+    const visitedTimers = startVisitedNodesAnimations(
       nodesToAnimate,
       speed,
       animatedIndex => {
-        onIndexAnimated(animatedIndex, nodesToAnimate);
+        onIndexAnimated(animatedIndex);
         if (animatedIndex === nodesToAnimate.length - 1) {
-          const shortestTimers = startShortestPathAnimation(
+          const pathTimers = startShortestPathAnimation(
             endNode,
             board.nodeMap,
-            speed
+            speed,
+            index => onPathAnimated(index, pathTimers)
           );
-          visualizerState.appendTimers(shortestTimers);
+          visualizerState.appendTimers(pathTimers);
         }
       }
     );
-    visualizerState.appendTimers(timers);
+
+    visualizerState.appendTimers(visitedTimers);
   });
 
   getNodes('#clear-board').forEach(eachNode =>
@@ -195,23 +204,36 @@ function initializeDropdownEvents() {
     })
   );
 
-  applyChangesForSpeedDropdown(SPEED_MAPPING.fast.id);
+  const allAlgorithmIds = Object.values(ALGORITHM_MAPPING).map(
+    eachValue => eachValue.id
+  );
   const allSpeedIds = Object.values(SPEED_MAPPING).map(
     eachValue => eachValue.id
   );
 
+  applyChangesForSpeedDropdown(SPEED_MAPPING.fast.id);
+
   getNodes('.dropdown-item').forEach(eachNode =>
     addHtmlEvent(eachNode, event => {
       const node = event.currentTarget as HTMLElement;
-      if (node.id === 'dfs-algorithm') {
-        visualizerState.setAlgorithm('dfs');
-        changeDropdownLabel(node, 'Algorithm: DFS');
-        visualizeButton.innerText = 'Visualize DFS';
-      } else if (node.id === 'bfs-algorithm') {
-        visualizerState.setAlgorithm('bfs');
-        changeDropdownLabel(node, 'Algorithm: BFS');
-        visualizeButton.innerText = 'Visualize BFS';
-      } else if (allSpeedIds.includes(node.id)) {
+
+      Object.values(ALGORITHM_MAPPING).forEach(eachConfig => {
+        eachConfig;
+      });
+
+      const algorithms = Object.keys(ALGORITHM_MAPPING) as Array<AlgorithmType>;
+      for (let i = 0; i < algorithms.length; i++) {
+        const config = ALGORITHM_MAPPING[algorithms[i]];
+        if (config.id === node.id) {
+          visualizerState.setAlgorithm(algorithms[i]);
+          changeDropdownLabel(node, `Algorithm: ${config.name}`);
+          visualizeButton.innerText = `Visualize ${config.name}`;
+          visualizeButton.disabled = false;
+          return;
+        }
+      }
+
+      if (allSpeedIds.includes(node.id)) {
         applyChangesForSpeedDropdown(node.id);
       }
     })

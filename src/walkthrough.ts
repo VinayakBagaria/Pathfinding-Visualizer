@@ -34,7 +34,7 @@ export function reInitiateWalkthrough() {
 }
 
 export function setUpWalkthrough() {
-  reInitiateWalkthrough();
+  setTimeout(() => reInitiateWalkthrough(), 600);
 
   addHtmlEvent(getNodeById('walkthrough-skip'), () => {
     currentIndex = -1;

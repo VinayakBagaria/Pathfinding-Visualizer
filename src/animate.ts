@@ -39,7 +39,7 @@ function startTimer(
   }, time);
 }
 
-export function startAllPathsAnimations(
+export function startVisitedNodesAnimations(
   nodesToAnimate: Array<Node>,
   speed: SpeedType,
   callback?: (animationIndex: number) => void
@@ -64,7 +64,8 @@ export function startAllPathsAnimations(
 export function startShortestPathAnimation(
   endNode: Node,
   nodeMap: Map<string, Node>,
-  speed: SpeedType
+  speed: SpeedType,
+  callback?: (animationIndex: number) => void
 ) {
   const shortestPathsToAnimate: Array<Node> = [];
   let previousNode: Node | null = endNode.previous;
@@ -74,8 +75,6 @@ export function startShortestPathAnimation(
     previousNode = nodeMap.get(previousNode.id)?.previous ?? null;
   }
 
-  console.log({ shortestPathsToAnimate });
-
   const timers: Array<Timer> = [];
   for (let i = 0; i < shortestPathsToAnimate.length; i++) {
     timers.push(
@@ -83,12 +82,11 @@ export function startShortestPathAnimation(
         shortestPathsToAnimate,
         i,
         (i + 1) * SPEED_MAPPING[speed].pathTime,
-        'shortest-path'
+        'shortest-path',
+        callback
       )
     );
   }
-
-  console.log({ timers });
 
   return timers;
 }
