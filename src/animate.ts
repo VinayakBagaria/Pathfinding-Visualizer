@@ -17,6 +17,7 @@ function startTimer(
       throw new Error('Unfound node');
     }
 
+    currentElement.classList.remove('unvisited');
     currentElement.classList.add('current');
 
     if (index >= 1) {
@@ -25,6 +26,7 @@ function startTimer(
       if (!previousElement) {
         throw new Error('Unfound node');
       }
+      previousElement.classList.remove('current');
       previousElement.classList.add('visited');
     }
 

@@ -10,20 +10,17 @@
         href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" />
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 
 <body>
     <header class="center">
         <h1 class="heading-1">Pathfinding Visualizer</h1>
 
-
         <div class="dropdown center" id="algorithms">
-            <div class="dropdown-controls">
-                Select Algorithm
-            </div>
+            <div class="dropdown-controls">Select Algorithm</div>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17 9.5L12 14.5L7 9.5" stroke="#2C3556" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
@@ -33,21 +30,13 @@
                 <li class="dropdown-item" id="bfs-algorithm">BFS</li>
             </ul>
         </div>
-        <button class="outlined center" id="visualize">
-            Pick Algorithm!
-        </button>
-        <button class="ghost center" id="clear-board">
-            Clear Board
-        </button>
-        <button class="ghost center" id="clear-walls">
-            Clear Walls
-        </button>
-
+        <button class="outlined center" id="visualize">Pick Algorithm!</button>
+        <button class="ghost center" id="clear-board">Clear Board</button>
+        <button class="ghost center" id="clear-walls">Clear Walls</button>
+        <button class="ghost center" id="clear-path">Clear Path</button>
 
         <div class="dropdown center" id="speed">
-            <div class="dropdown-controls">
-                Speed
-            </div>
+            <div class="dropdown-controls">Speed</div>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17 9.5L12 14.5L7 9.5" stroke="#2C3556" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
@@ -58,16 +47,7 @@
                 <li class="dropdown-item" id="slow-speed">Slow</li>
             </ul>
         </div>
-
-
     </header>
-
-
-
-
-
-
-
 
     <table id="board"></table>
 

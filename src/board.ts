@@ -142,6 +142,8 @@ class Board {
       return;
     }
 
+    currentElement.classList.remove('visited');
+    currentElement.classList.remove('current');
     currentElement.classList.remove('unvisited');
     currentElement.classList.remove('wall');
     currentElement.classList.add(newStatus);
@@ -169,6 +171,19 @@ class Board {
   clearWalls() {
     for (const pair of this.nodeMap) {
       if (pair[1].status === 'wall') {
+        this.changeNodeElement(pair[0], 'unvisited');
+      }
+    }
+  }
+
+  clearPath() {
+    for (const pair of this.nodeMap) {
+      const currentNodeId = pair[0];
+      if (currentNodeId === this.startId) {
+        this.changeNodeElement(currentNodeId, 'start');
+      } else if (currentNodeId === this.endId) {
+        this.changeNodeElement(currentNodeId, 'end');
+      } else if (pair[1].status === 'visited') {
         this.changeNodeElement(pair[0], 'unvisited');
       }
     }

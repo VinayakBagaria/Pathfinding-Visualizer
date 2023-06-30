@@ -61,6 +61,10 @@ function initializeButtonEvents() {
   addHtmlEvent(getNodes('#clear-walls'), () => {
     board.clearWalls();
   });
+
+  addHtmlEvent(getNodes('#clear-path'), () => {
+    board.clearPath();
+  });
 }
 
 function applyChangesForSpeedDropdown(speedId: string) {
