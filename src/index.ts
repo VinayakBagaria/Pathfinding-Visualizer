@@ -63,15 +63,34 @@ function initializeButtonEvents() {
   });
 }
 
+function applyChangesForSpeedDropdown(speedId: string) {
+  const speeds = Object.keys(SPEED_MAPPING) as Array<SpeedType>;
+  for (let i = 0; i < speeds.length; i++) {
+    const mapping = SPEED_MAPPING[speeds[i]];
+    if (mapping.id === speedId) {
+      visualizerState.setSpeed(speeds[i]);
+      const node = getNodes(`#${mapping.id}`)[0];
+      changeDropdownLabel(node, `Speed: ${mapping.name}`);
+      break;
+    }
+  }
+}
+
 function initializeDropdownEvents() {
   addHtmlEvent(getNodes('.dropdown'), event => {
     const node = event.currentTarget as HTMLElement;
+
     if (node.classList.contains('open')) {
       node.classList.remove('open');
     } else {
       node.classList.add('open');
     }
   });
+
+  applyChangesForSpeedDropdown(SPEED_MAPPING.fast.id);
+  const allSpeedIds = Object.values(SPEED_MAPPING).map(
+    eachValue => eachValue.id
+  );
 
   addHtmlEvent(getNodes('.dropdown-item'), event => {
     const node = event.currentTarget as HTMLElement;
@@ -83,15 +102,8 @@ function initializeDropdownEvents() {
       visualizerState.setAlgorithm('bfs');
       changeDropdownLabel(node, 'Algorithm: BFS');
       visualizeButton.innerText = 'Visualize BFS';
-    } else if (node.id === 'fast-speed') {
-      visualizerState.setSpeed('fast');
-      changeDropdownLabel(node, 'Speed: Fast');
-    } else if (node.id === 'average-speed') {
-      visualizerState.setSpeed('average');
-      changeDropdownLabel(node, 'Speed: Average');
-    } else if (node.id === 'slow-speed') {
-      visualizerState.setSpeed('slow');
-      changeDropdownLabel(node, 'Speed: Slow');
+    } else if (allSpeedIds.includes(node.id)) {
+      applyChangesForSpeedDropdown(node.id);
     }
   });
 }
