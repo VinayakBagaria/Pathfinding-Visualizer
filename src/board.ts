@@ -22,9 +22,6 @@ class Board {
   private dragging: Record<'start' | 'end', boolean>;
   private isCreatingWall: boolean;
 
-  private algorithm: AlgorithmType;
-  private speed: SpeedType;
-
   constructor(_boardNode: Element) {
     this.boardNode = _boardNode;
 
@@ -171,24 +168,16 @@ class Board {
     this.createGrid();
   }
 
-  setAlgorithm(algorithm: AlgorithmType) {
-    this.algorithm = algorithm;
-  }
-
-  setSpeed(speed: SpeedType) {
-    this.speed = speed;
-  }
-
-  start() {
+  start(algorithm: AlgorithmType) {
     let isSuccessful = false;
-    if (this.algorithm === 'dfs') {
+    if (algorithm === 'dfs') {
       isSuccessful = dfsAlgorithm(
         this.startId,
         this.endId,
         this.nodeMap,
         this.nodesToAnimate
       );
-    } else if (this.algorithm === 'bfs') {
+    } else if (algorithm === 'bfs') {
       isSuccessful = bfsAlgorithm(
         this.startId,
         this.endId,
@@ -196,7 +185,7 @@ class Board {
         this.nodesToAnimate
       );
     } else {
-      throw new Error(`Algorithm not implemented: ${this.algorithm}`);
+      throw new Error(`Algorithm not implemented: ${algorithm}`);
     }
     return { isSuccessful, nodesToAnimate: this.nodesToAnimate };
   }

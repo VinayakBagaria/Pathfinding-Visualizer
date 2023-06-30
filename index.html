@@ -16,8 +16,10 @@
 </head>
 
 <body>
-    <header>
+    <header class="center">
         <h1 class="heading-1">Pathfinding Visualizer</h1>
+
+
         <div class="dropdown center" id="algorithms">
             <div class="dropdown-controls">
                 Select Algorithm
@@ -31,10 +33,13 @@
                 <li class="dropdown-item" id="bfs-algorithm">BFS</li>
             </ul>
         </div>
-
         <button class="outlined center" id="visualize">
-            Visualize
+            Pick Algorithm!
         </button>
+        <button class="ghost center" id="clear">
+            Clear
+        </button>
+
 
         <div class="dropdown center" id="speed">
             <div class="dropdown-controls">
@@ -50,6 +55,7 @@
                 <li class="dropdown-item" id="slow-speed">Slow</li>
             </ul>
         </div>
+
 
     </header>
 

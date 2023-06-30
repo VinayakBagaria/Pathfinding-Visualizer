@@ -13,3 +13,8 @@ button.outlined {
   color: var(--text-primary);
   border: 1px solid var(--text-primary);
 }
+
+button.ghost {
+  background-color: transparent;
+  color: var(--text-primary);
+}

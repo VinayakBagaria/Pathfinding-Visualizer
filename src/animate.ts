@@ -1,10 +1,9 @@
 import Node from './node';
 
-const SPEED = 0;
-
 function startTimer(
   nodesToAnimate: Array<Node>,
   index: number,
+  time: number,
   callback: (animationIndex: number) => void
 ) {
   if (index === nodesToAnimate.length) {
@@ -30,15 +29,16 @@ function startTimer(
     }
 
     callback(index);
-    startTimer(nodesToAnimate, index + 1, callback);
-  }, SPEED);
+    startTimer(nodesToAnimate, index + 1, time, callback);
+  }, time);
 }
 
 function startAnimations(
   nodesToAnimate: Array<Node>,
+  time: number,
   callback: (animationIndex: number) => void
 ) {
-  startTimer(nodesToAnimate, 0, callback);
+  startTimer(nodesToAnimate, 0, time, callback);
 }
 
 export default startAnimations;

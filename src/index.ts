@@ -1,5 +1,32 @@
 import startAnimations from './animate';
 import Board from './board';
+import { AlgorithmType, SpeedType } from './types';
+
+class VisualizerState {
+  algorithm: AlgorithmType;
+  speed: SpeedType;
+
+  setAlgorithm(algorithm: AlgorithmType) {
+    this.algorithm = algorithm;
+  }
+
+  setSpeed(speed: SpeedType) {
+    this.speed = speed;
+  }
+
+  getTimeForSpeed() {
+    if (this.speed === 'fast') {
+      return 0;
+    }
+    if (this.speed === 'average') {
+      return 100;
+    }
+    if (this.speed === 'slow') {
+      return 500;
+    }
+    throw new Error('Speed is not set');
+  }
+}
 
 function executeSequence() {
   const boardNode = document.querySelector('#board');
@@ -8,29 +35,36 @@ function executeSequence() {
     return;
   }
 
+  const visualizerState = new VisualizerState();
   const board = new Board(boardNode);
 
-  addSelectorEvent('#visualize', event => {
+  const visualizeButton = addSelectorEvent('#visualize', event => {
     const element = event.target as HTMLElement;
-    const { isSuccessful, nodesToAnimate } = board.start();
+    const { isSuccessful, nodesToAnimate } = board.start(
+      visualizerState.algorithm
+    );
     const buttonText = element.innerText;
 
     if (isSuccessful) {
-      startAnimations(nodesToAnimate, animationIndex => {
-        if (animationIndex === 0) {
-          element.classList.add('loading');
-          element.innerText = 'Loading...';
-        } else if (animationIndex === nodesToAnimate.length - 1) {
-          element.classList.remove('loading');
-          element.innerText = buttonText;
+      startAnimations(
+        nodesToAnimate,
+        visualizerState.getTimeForSpeed(),
+        animationIndex => {
+          if (animationIndex === 0) {
+            element.classList.add('loading');
+            element.innerText = 'Loading...';
+          } else if (animationIndex === nodesToAnimate.length - 1) {
+            element.classList.remove('loading');
+            element.innerText = buttonText;
 
-          alert('Node is found!');
+            alert('Node is found!');
+          }
         }
-      });
+      );
     } else {
       alert("Can't find path");
     }
-  });
+  })[0];
 
   addSelectorEvent('#clear', () => {
     board.clearBoard();
@@ -48,19 +82,21 @@ function executeSequence() {
   addSelectorEvent('.dropdown-item', event => {
     const node = event.currentTarget as HTMLElement;
     if (node.id === 'dfs-algorithm') {
-      board.setAlgorithm('dfs');
+      visualizerState.setAlgorithm('dfs');
       changeDropdownLabel(node, 'Algorithm: DFS');
+      visualizeButton.innerText = 'Visualize DFS';
     } else if (node.id === 'bfs-algorithm') {
-      board.setAlgorithm('bfs');
+      visualizerState.setAlgorithm('bfs');
       changeDropdownLabel(node, 'Algorithm: BFS');
+      visualizeButton.innerText = 'Visualize BFS';
     } else if (node.id === 'fast-speed') {
-      board.setSpeed('fast');
+      visualizerState.setSpeed('fast');
       changeDropdownLabel(node, 'Speed: Fast');
     } else if (node.id === 'average-speed') {
-      board.setSpeed('average');
+      visualizerState.setSpeed('average');
       changeDropdownLabel(node, 'Speed: Average');
     } else if (node.id === 'slow-speed') {
-      board.setSpeed('slow');
+      visualizerState.setSpeed('slow');
       changeDropdownLabel(node, 'Speed: Slow');
     }
   });
@@ -70,8 +106,9 @@ function addSelectorEvent(
   selector: string,
   callback: (element: Event) => void
 ) {
-  const nodes = document.querySelectorAll(selector);
+  const nodes = document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
   nodes.forEach(eachNode => eachNode.addEventListener('click', callback));
+  return nodes;
 }
 
 function changeDropdownLabel(node: HTMLElement, text: string) {

@@ -34,6 +34,11 @@ button.loading {
   align-items: center;
 }
 
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
 :root {
   --primary-color: #fa5762;
   --primary-bg: #0c1021;
