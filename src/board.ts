@@ -2,7 +2,7 @@ import Node from './node';
 import dfsAlgorithm from './dfs';
 import bfsAlgorithm from './bfs';
 import { createNodeId } from './helpers';
-import { AlgorithmType, NodeStatusType, SpeedType } from './types';
+import { AlgorithmType, NodeStatusType } from './types';
 
 class Board {
   private boardNode: Element;

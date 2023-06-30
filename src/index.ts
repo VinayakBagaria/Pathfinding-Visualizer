@@ -7,6 +7,7 @@ import { addHtmlEvent, changeDropdownLabel, getNodes } from './utils';
 class VisualizerState {
   algorithm: AlgorithmType;
   speed: SpeedType;
+  timers: Array<NodeJS.Timeout>;
 
   setAlgorithm(algorithm: AlgorithmType) {
     this.algorithm = algorithm;
@@ -19,6 +20,14 @@ class VisualizerState {
   getTimeForSpeed() {
     return SPEED_MAPPING[this.speed].time;
   }
+
+  setTimers(_timers: Array<NodeJS.Timeout>) {
+    this.timers = _timers;
+  }
+
+  clearTimers() {
+    this.timers.forEach(eachTimer => clearTimeout(eachTimer));
+  }
 }
 
 const visualizerState = new VisualizerState();
@@ -27,29 +36,20 @@ const board = new Board(boardNode);
 const visualizeButton = getNodes(NODE_MAPPING.visualizeButton)[0];
 
 function initializeButtonEvents() {
-  addHtmlEvent([visualizeButton], event => {
-    const element = event.target as HTMLElement;
+  addHtmlEvent([visualizeButton], () => {
     const { isSuccessful, nodesToAnimate } = board.start(
       visualizerState.algorithm
     );
-    const buttonText = element.innerText;
 
-    if (isSuccessful) {
-      startAnimations(
-        nodesToAnimate,
-        visualizerState.getTimeForSpeed(),
-        animationIndex => {
-          if (animationIndex === 0) {
-            element.classList.add('loading');
-            element.innerText = 'Loading...';
-          } else if (animationIndex === nodesToAnimate.length - 1) {
-            element.classList.remove('loading');
-            element.innerText = buttonText;
-          }
-        }
-      );
-    } else {
+    if (!isSuccessful) {
+      return;
     }
+
+    const timers = startAnimations(
+      nodesToAnimate,
+      visualizerState.getTimeForSpeed()
+    );
+    visualizerState.setTimers(timers);
   });
 
   addHtmlEvent(getNodes('#clear-board'), () => {
@@ -62,6 +62,10 @@ function initializeButtonEvents() {
 
   addHtmlEvent(getNodes('#clear-path'), () => {
     board.clearPath();
+  });
+
+  addHtmlEvent(getNodes('#play-pause'), () => {
+    visualizerState.clearTimers();
   });
 }
 

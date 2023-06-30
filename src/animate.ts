@@ -4,13 +4,9 @@ function startTimer(
   nodesToAnimate: Array<Node>,
   index: number,
   time: number,
-  callback: (animationIndex: number) => void
+  callback?: (animationIndex: number) => void
 ) {
-  if (index === nodesToAnimate.length) {
-    return;
-  }
-
-  setTimeout(() => {
+  return setTimeout(() => {
     const node = nodesToAnimate[index];
     const currentElement = document.getElementById(node.id);
     if (!currentElement) {
@@ -30,17 +26,22 @@ function startTimer(
       previousElement.classList.add('visited');
     }
 
-    callback(index);
-    startTimer(nodesToAnimate, index + 1, time, callback);
+    callback?.(index);
   }, time);
 }
 
 function startAnimations(
   nodesToAnimate: Array<Node>,
-  time: number,
-  callback: (animationIndex: number) => void
+  speed: number,
+  callback?: (animationIndex: number) => void
 ) {
-  startTimer(nodesToAnimate, 0, time, callback);
+  const timers: Array<NodeJS.Timeout> = [];
+
+  for (let i = 0; i < nodesToAnimate.length; i++) {
+    timers.push(startTimer(nodesToAnimate, i, (i + 1) * speed, callback));
+  }
+
+  return timers;
 }
 
 export default startAnimations;

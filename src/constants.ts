@@ -6,7 +6,7 @@ export const SPEED_MAPPING: Record<
 > = Object.freeze({
   fast: {
     id: 'fast-speed',
-    time: 0,
+    time: 5,
     name: 'Fast',
   },
   average: {
@@ -16,7 +16,7 @@ export const SPEED_MAPPING: Record<
   },
   slow: {
     id: 'slow-speed',
-    time: 500,
+    time: 300,
     name: 'Slow',
   },
 });
