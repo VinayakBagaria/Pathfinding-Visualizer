@@ -1,0 +1,47 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: rgba(25, 25, 25, 0.5);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+
+  &.open {
+    pointer-events: all;
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  width: 375px;
+  position: relative;
+  background-color: #fff;
+  padding: var(--small-horizontal-padding);
+  border-radius: 4px;
+}
+
+.modal-close {
+  cursor: pointer;
+  position: absolute;
+  right: var(--small-horizontal-padding);
+}
+
+.modal-title {
+  font-family: Montserrat;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 30px;
+  margin: 12px 0 8px;
+}
+
+.modal-description {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 24px;
+  text-align: center;
+}

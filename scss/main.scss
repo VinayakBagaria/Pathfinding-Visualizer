@@ -2,6 +2,7 @@
 @import 'button';
 @import 'table';
 @import 'dropdown';
+@import 'modal';
 
 *,
 *::before,
@@ -49,6 +50,7 @@ button.loading {
 
   --horizontal-padding: 32px;
   --vertical-padding: 12px;
+  --small-horizontal-padding: 24px;
 
   --controls-height: 40px;
 }

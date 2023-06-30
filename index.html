@@ -12,7 +12,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;1,400&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -53,6 +55,28 @@
 
     <div class="table-container center">
         <table id="board"></table>
+    </div>
+
+    <div class="modal-overlay center">
+        <div class="modal-container">
+            <div class="modal-close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" stroke="#4C5578" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div class="modal-icon center">
+                <svg width="57" height="56" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4.5" y="4" width="48" height="48" rx="24" fill="#FFE7E8" />
+                    <path
+                        d="M29.5833 32.3333H28.5V28H27.4167M28.5 23.6667H28.5108M38.25 28C38.25 33.3848 33.8848 37.75 28.5 37.75C23.1152 37.75 18.75 33.3848 18.75 28C18.75 22.6152 23.1152 18.25 28.5 18.25C33.8848 18.25 38.25 22.6152 38.25 28Z"
+                        stroke="#FA5762" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                    <rect x="4.5" y="4" width="48" height="48" rx="24" stroke="#FFF4F5" stroke-width="8" />
+                </svg>
+            </div>
+            <p class="modal-title center"></p>
+            <p class="modal-description center"></p>
+        </div>
     </div>
 
     <script src="./build/index.js"></script>

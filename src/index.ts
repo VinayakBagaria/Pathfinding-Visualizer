@@ -1,6 +1,7 @@
 import Board from './board';
 import Timer from './timer';
 import startAnimations from './animate';
+import showModal from './modal';
 import { NODE_MAPPING, SPEED_MAPPING } from './constants';
 import { AlgorithmType, SpeedType } from './types';
 import { addHtmlEvent, changeDropdownLabel, getNodes } from './utils';
@@ -107,6 +108,10 @@ function initializeButtonEvents() {
     );
 
     if (!isSuccessful) {
+      showModal(
+        'Error!',
+        'Cannot find path to goal as we got blocked by walls. Kindly re-try.'
+      );
       return;
     }
 
