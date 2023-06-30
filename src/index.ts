@@ -33,8 +33,7 @@ class VisualizerState {
     this.timers = _timers;
   }
 
-  clearTimers() {
-    this.hasStarted = false;
+  private clearTimers() {
     this.timers.forEach(eachTimer => eachTimer.clear());
     this.timers = [];
   }
@@ -51,6 +50,13 @@ class VisualizerState {
     this.hasStarted = hasStarted;
     if (this.hasStarted) {
       this.isPlaying = true;
+    } else {
+      this.clearTimers();
+      this.calculateNewDomState();
+    }
+
+    if (visualizeButton instanceof HTMLButtonElement) {
+      visualizeButton.disabled = this.hasStarted;
     }
   }
 
@@ -114,17 +120,17 @@ function initializeButtonEvents() {
 
   addHtmlEvent(getNodes('#clear-board'), () => {
     board.clearBoard();
-    visualizerState.clearTimers();
+    visualizerState.setStarted(false);
   });
 
   addHtmlEvent(getNodes('#clear-walls'), () => {
     board.clearWalls();
-    visualizerState.clearTimers();
+    visualizerState.setStarted(false);
   });
 
   addHtmlEvent(getNodes('#clear-path'), () => {
     board.clearPath();
-    visualizerState.clearTimers();
+    visualizerState.setStarted(false);
   });
 
   addHtmlEvent([playPauseButton], () => {

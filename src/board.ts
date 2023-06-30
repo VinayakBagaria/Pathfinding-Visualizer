@@ -9,13 +9,10 @@ class Board {
   private height: number;
   private width: number;
 
-  private startCoords: [number, number];
-  private endCoords: [number, number];
   private startId: string;
   private endId: string;
 
   private nodeMap: Map<string, Node>;
-  private boardArray: Array<Array<Node>>;
 
   private nodesToAnimate: Array<Node>;
 
@@ -26,8 +23,6 @@ class Board {
     this.boardNode = _boardNode;
 
     this.setInitialCoordinates();
-
-    this.boardArray = [];
 
     this.dragging = { start: false, end: false };
     this.isCreatingWall = false;
@@ -40,15 +35,16 @@ class Board {
     const { height, width } = this.boardNode.getBoundingClientRect();
     this.height = height / 28;
     this.width = width / 28;
-
-    this.startCoords = [
+    const startCoords = [
       Math.floor(this.height / 2),
       Math.floor(this.width / 4),
     ];
-    this.endCoords = [
+    this.startId = createNodeId(startCoords[0], startCoords[1]);
+    const endCoords = [
       Math.floor(this.height / 2),
       3 * Math.floor(this.width / 4),
     ];
+    this.endId = createNodeId(endCoords[0], endCoords[1]);
   }
 
   private createGrid() {
@@ -58,15 +54,14 @@ class Board {
 
     for (let r = 0; r < this.height; r++) {
       let currentRow = '';
-      const currentNodes: Array<Node> = [];
 
       for (let c = 0; c < this.width; c++) {
         const nodeId = createNodeId(r, c);
         let nodeStatus: NodeStatusType = 'unvisited';
-        if (r == this.startCoords[0] && c == this.startCoords[1]) {
+        if (nodeId === this.startId) {
           nodeStatus = 'start';
           this.startId = nodeId;
-        } else if (r == this.endCoords[0] && c == this.endCoords[1]) {
+        } else if (nodeId === this.endId) {
           nodeStatus = 'end';
           this.endId = nodeId;
         }
@@ -74,11 +69,9 @@ class Board {
 
         const node = new Node(r, c, nodeId, nodeStatus);
         this.nodeMap.set(nodeId, node);
-        currentNodes.push(node);
       }
 
       tableHtml += `<tr id="row ${r}">${currentRow}</tr>`;
-      this.boardArray.push(currentNodes);
     }
 
     this.boardNode.innerHTML = tableHtml;
@@ -190,6 +183,7 @@ class Board {
   }
 
   start(algorithm: AlgorithmType) {
+    this.nodesToAnimate = [];
     let isSuccessful = false;
     if (algorithm === 'dfs') {
       isSuccessful = dfsAlgorithm(
