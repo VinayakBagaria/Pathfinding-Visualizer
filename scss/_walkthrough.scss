@@ -1,0 +1,67 @@
+#walkthrough-overlay {
+  opacity: 0;
+  pointer-events: none;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+#walkthrough-container {
+  padding: 24px;
+  background-color: #1a1e3e;
+  border-radius: 12px;
+  width: 300px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    border-color: var(--primary-bg);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom-width: 8px;
+    border-bottom-style: solid;
+  }
+}
+
+#walkthrough-stepper {
+  display: initial;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #2c3556;
+  color: #e8eaef;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+#walkthrough-title {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  color: var(--text-primary);
+  margin: 8px 0;
+}
+
+#walkthrough-separator {
+  height: 2px;
+  width: 24px;
+  margin-bottom: 8px;
+  background-color: #038298;
+}
+
+#walkthrough-description {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 20px;
+  white-space: break-spaces;
+  margin-bottom: 24px;
+}
+
+#walkthrough-next {
+  margin-right: 12px;
+}

@@ -24,7 +24,49 @@ export const SPEED_MAPPING: Record<
   },
 });
 
-export const NODE_MAPPING = Object.freeze({
-  visualizeButton: '#visualize',
-  playPauseButton: '#play-pause',
+export const NODE_TO_ID_MAPPING = Object.freeze({
+  board: 'board',
+  visualizeButton: 'visualize',
+  playPauseButton: 'play-pause',
 });
+
+export const WALKTHROUGH_POSITIONS = [
+  {
+    reference: '#algorithms',
+    top: 25,
+    left: 0,
+    title: 'Pick an algorithm',
+    description: 'Choose an algorithm from this menu.',
+  },
+  {
+    reference: '.start',
+    top: 0,
+    left: 200,
+    title: 'Add walls',
+    description: 'Click on the grid to add a wall. A path cannot cross a wall.',
+  },
+  {
+    reference: '.start',
+    top: 10,
+    left: -20,
+    title: 'Drag nodes',
+    description:
+      'You can drag the start and end target to any place in the grid.',
+  },
+  {
+    reference: '#visualize',
+    top: 25,
+    left: 0,
+    title: 'Controls',
+    description:
+      'You can start the visualization, pause/resume it in between, adjust the visualization speed, clear the board from the controls panel here.',
+  },
+  {
+    reference: '#page-title',
+    top: 30,
+    left: 0,
+    title: 'Revisit',
+    description:
+      'If you want to see this tutorial again, click on this title again.',
+  },
+];

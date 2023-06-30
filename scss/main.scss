@@ -1,8 +1,24 @@
+@import 'utils';
 @import 'header';
 @import 'button';
 @import 'table';
 @import 'dropdown';
 @import 'modal';
+@import 'walkthrough';
+
+:root {
+  --primary-bg: #1a1a1b;
+  --text-primary: #d7dadc;
+  --border-color: #343536;
+  --hovered-color: #272729;
+  --disabled-color: #787c7e;
+
+  --horizontal-padding: 32px;
+  --vertical-padding: 12px;
+  --small-horizontal-padding: 24px;
+
+  --controls-height: 40px;
+}
 
 *,
 *::before,
@@ -24,33 +40,4 @@ body {
 body {
   display: flex;
   flex-direction: column;
-}
-
-button.loading {
-  opacity: 0.5;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.align-center {
-  display: flex;
-  align-items: center;
-}
-
-:root {
-  --primary-bg: #1a1a1b;
-  --text-primary: #d7dadc;
-  --border-color: #343536;
-  --hovered-color: #272729;
-  --disabled-color: #787c7e;
-
-  --horizontal-padding: 32px;
-  --vertical-padding: 12px;
-  --small-horizontal-padding: 24px;
-
-  --controls-height: 40px;
 }

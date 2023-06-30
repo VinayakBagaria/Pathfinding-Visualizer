@@ -13,14 +13,12 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;1,400&family=Roboto:wght@300;400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <header class="center">
-        <h1 class="heading-1">Pathfinding Visualizer</h1>
+        <h1 id="page-title">Pathfinding Visualizer</h1>
 
         <div class="dropdown center" id="algorithms">
             <div class="dropdown-controls">Select Algorithm</div>
@@ -34,7 +32,7 @@
             </ul>
         </div>
         <button class="outlined center" id="play-pause" disabled>Pause</button>
-        <button class="outlined center" id="visualize">Pick Algorithm!</button>
+        <button class="outlined center" id="visualize">Visualize!</button>
         <button class="ghost center" id="clear-board">Clear Board</button>
         <button class="ghost center" id="clear-walls">Clear Walls</button>
         <button class="ghost center" id="clear-path">Clear Path</button>
@@ -58,9 +56,9 @@
         <table id="board"></table>
     </div>
 
-    <div class="modal-overlay center">
+    <div class="full-fixed center" id="modal-overlay">
         <div class="modal-container">
-            <div class="modal-close">
+            <div id="modal-close">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 18L18 6M6 6L18 18" stroke="#4C5578" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" />
@@ -75,8 +73,21 @@
                     <rect x="4.5" y="4" width="48" height="48" rx="24" stroke="#FFF4F5" stroke-width="8" />
                 </svg>
             </div>
-            <p class="modal-title center"></p>
-            <p class="modal-description center"></p>
+            <p class="center" id="modal-title"></p>
+            <p class="center" id="modal-description"></p>
+        </div>
+    </div>
+
+    <div class="full-fixed" id="walkthrough-overlay">
+        <div id="walkthrough-container">
+            <div id="walkthrough-stepper">1 of 5</div>
+            <h5 id="walkthrough-title">Overview of algos</h5>
+            <div id="walkthrough-separator"></div>
+            <p id="walkthrough-description">You can check daily insights from here.</p>
+            <div class="align-center">
+                <button class="outlined center smaller" id="walkthrough-next">Next</button>
+                <button class="ghost center smaller" id="walkthrough-skip">Skip</button>
+            </div>
         </div>
     </div>
 

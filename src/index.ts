@@ -2,14 +2,20 @@ import Board from './board';
 import Timer from './timer';
 import { startAllPathsAnimations, startShortestPathAnimation } from './animate';
 import showModal from './modal';
-import { NODE_MAPPING, SPEED_MAPPING } from './constants';
+import { setUpWalkthrough, reInitiateWalkthrough } from './walkthrough';
+import { NODE_TO_ID_MAPPING, SPEED_MAPPING } from './constants';
 import { AlgorithmType, SpeedType } from './types';
-import { addHtmlEvent, changeDropdownLabel, getNodes } from './utils';
+import {
+  addHtmlEvent,
+  changeDropdownLabel,
+  getNodes,
+  getNodeById,
+} from './utils';
 
-const boardNode = document.querySelector('#board') as HTMLElement;
+const boardNode = getNodeById(NODE_TO_ID_MAPPING.board);
 const board = new Board(boardNode);
-const visualizeButton = getNodes(NODE_MAPPING.visualizeButton)[0];
-const playPauseButton = getNodes(NODE_MAPPING.playPauseButton)[0];
+const visualizeButton = getNodeById(NODE_TO_ID_MAPPING.visualizeButton);
+const playPauseButton = getNodeById(NODE_TO_ID_MAPPING.playPauseButton);
 
 class VisualizerState {
   algorithm: AlgorithmType;
@@ -98,7 +104,7 @@ function onIndexAnimated(
 }
 
 function initializeButtonEvents() {
-  addHtmlEvent([visualizeButton], () => {
+  addHtmlEvent(visualizeButton, () => {
     const { endNode, nodesToAnimate } = board.start(visualizerState.algorithm);
 
     if (endNode === null) {
@@ -129,23 +135,33 @@ function initializeButtonEvents() {
     visualizerState.appendTimers(timers);
   });
 
-  addHtmlEvent(getNodes('#clear-board'), () => {
-    board.clearBoard();
-    visualizerState.setStarted(false);
-  });
+  getNodes('#clear-board').forEach(eachNode =>
+    addHtmlEvent(eachNode, () => {
+      board.clearBoard();
+      visualizerState.setStarted(false);
+    })
+  );
 
-  addHtmlEvent(getNodes('#clear-walls'), () => {
-    board.clearWalls();
-    visualizerState.setStarted(false);
-  });
+  getNodes('#clear-walls').forEach(eachNode =>
+    addHtmlEvent(eachNode, () => {
+      board.clearWalls();
+      visualizerState.setStarted(false);
+    })
+  );
 
-  addHtmlEvent(getNodes('#clear-path'), () => {
-    board.clearPath();
-    visualizerState.setStarted(false);
-  });
+  getNodes('#clear-path').forEach(eachNode =>
+    addHtmlEvent(eachNode, () => {
+      board.clearPath();
+      visualizerState.setStarted(false);
+    })
+  );
 
-  addHtmlEvent([playPauseButton], () => {
+  addHtmlEvent(playPauseButton, () => {
     visualizerState.playOrPauseTimer();
+  });
+
+  addHtmlEvent(getNodeById('page-title'), () => {
+    reInitiateWalkthrough();
   });
 }
 
@@ -155,7 +171,7 @@ function applyChangesForSpeedDropdown(speedId: string) {
     const mapping = SPEED_MAPPING[speeds[i]];
     if (mapping.id === speedId) {
       visualizerState.setSpeed(speeds[i]);
-      const node = getNodes(`#${mapping.id}`)[0];
+      const node = getNodeById(mapping.id);
       changeDropdownLabel(node, `Speed: ${mapping.name}`);
       break;
     }
@@ -163,36 +179,40 @@ function applyChangesForSpeedDropdown(speedId: string) {
 }
 
 function initializeDropdownEvents() {
-  addHtmlEvent(getNodes('.dropdown'), event => {
-    const node = event.currentTarget as HTMLElement;
-
-    if (node.classList.contains('open')) {
-      node.classList.remove('open');
-    } else {
-      node.classList.add('open');
-    }
-  });
+  getNodes('.dropdown').forEach(eachNode =>
+    addHtmlEvent(eachNode, event => {
+      const node = event.currentTarget as HTMLElement;
+      if (node.classList.contains('open')) {
+        node.classList.remove('open');
+      } else {
+        node.classList.add('open');
+      }
+    })
+  );
 
   applyChangesForSpeedDropdown(SPEED_MAPPING.fast.id);
   const allSpeedIds = Object.values(SPEED_MAPPING).map(
     eachValue => eachValue.id
   );
 
-  addHtmlEvent(getNodes('.dropdown-item'), event => {
-    const node = event.currentTarget as HTMLElement;
-    if (node.id === 'dfs-algorithm') {
-      visualizerState.setAlgorithm('dfs');
-      changeDropdownLabel(node, 'Algorithm: DFS');
-      visualizeButton.innerText = 'Visualize DFS';
-    } else if (node.id === 'bfs-algorithm') {
-      visualizerState.setAlgorithm('bfs');
-      changeDropdownLabel(node, 'Algorithm: BFS');
-      visualizeButton.innerText = 'Visualize BFS';
-    } else if (allSpeedIds.includes(node.id)) {
-      applyChangesForSpeedDropdown(node.id);
-    }
-  });
+  getNodes('.dropdown-item').forEach(eachNode =>
+    addHtmlEvent(eachNode, event => {
+      const node = event.currentTarget as HTMLElement;
+      if (node.id === 'dfs-algorithm') {
+        visualizerState.setAlgorithm('dfs');
+        changeDropdownLabel(node, 'Algorithm: DFS');
+        visualizeButton.innerText = 'Visualize DFS';
+      } else if (node.id === 'bfs-algorithm') {
+        visualizerState.setAlgorithm('bfs');
+        changeDropdownLabel(node, 'Algorithm: BFS');
+        visualizeButton.innerText = 'Visualize BFS';
+      } else if (allSpeedIds.includes(node.id)) {
+        applyChangesForSpeedDropdown(node.id);
+      }
+    })
+  );
 }
 
 initializeButtonEvents();
 initializeDropdownEvents();
+setUpWalkthrough();

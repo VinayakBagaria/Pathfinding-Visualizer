@@ -1,16 +1,14 @@
-import { addHtmlEvent, getNodes } from './utils';
+import { addHtmlEvent, getNodeById } from './utils';
 
 function showModal(titleText: string, descriptionText: string) {
-  const overlayNode = getNodes('.modal-overlay')[0];
+  const overlayNode = getNodeById('modal-overlay');
+
   overlayNode.classList.add('open');
+  getNodeById('modal-title').innerText = titleText;
 
-  const titleNode = getNodes('.modal-title')[0];
-  titleNode.innerText = titleText;
+  getNodeById('modal-description').innerText = descriptionText;
 
-  const descriptionNode = getNodes('.modal-description')[0];
-  descriptionNode.innerText = descriptionText;
-
-  addHtmlEvent(getNodes('.modal-close'), () => {
+  addHtmlEvent(getNodeById('modal-close'), () => {
     overlayNode.classList.remove('open');
   });
 }

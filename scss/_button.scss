@@ -11,6 +11,11 @@ button {
   &[disabled='disabled'] {
     cursor: not-allowed;
   }
+
+  &.smaller {
+    height: 32px;
+    padding: 6px 16px;
+  }
 }
 
 button.outlined {
