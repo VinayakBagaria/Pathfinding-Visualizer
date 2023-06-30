@@ -32,8 +32,6 @@ class Board {
     this.dragging = { start: false, end: false };
     this.isCreatingWall = false;
 
-    this.speed = 'fast';
-
     this.createGrid();
     this.addEventListeners();
   }
@@ -166,6 +164,14 @@ class Board {
   clearBoard() {
     this.setInitialCoordinates();
     this.createGrid();
+  }
+
+  clearWalls() {
+    for (const pair of this.nodeMap) {
+      if (pair[1].status === 'wall') {
+        this.changeNodeElement(pair[0], 'unvisited');
+      }
+    }
   }
 
   start(algorithm: AlgorithmType) {

@@ -1,6 +1,8 @@
 import startAnimations from './animate';
 import Board from './board';
+import { NODE_MAPPING, SPEED_MAPPING } from './constants';
 import { AlgorithmType, SpeedType } from './types';
+import { addHtmlEvent, changeDropdownLabel, getNodes } from './utils';
 
 class VisualizerState {
   algorithm: AlgorithmType;
@@ -15,30 +17,17 @@ class VisualizerState {
   }
 
   getTimeForSpeed() {
-    if (this.speed === 'fast') {
-      return 0;
-    }
-    if (this.speed === 'average') {
-      return 100;
-    }
-    if (this.speed === 'slow') {
-      return 500;
-    }
-    throw new Error('Speed is not set');
+    return SPEED_MAPPING[this.speed].time;
   }
 }
 
-function executeSequence() {
-  const boardNode = document.querySelector('#board');
+const visualizerState = new VisualizerState();
+const boardNode = document.querySelector('#board') as HTMLElement;
+const board = new Board(boardNode);
+const visualizeButton = getNodes(NODE_MAPPING.visualizeButton)[0];
 
-  if (!boardNode) {
-    return;
-  }
-
-  const visualizerState = new VisualizerState();
-  const board = new Board(boardNode);
-
-  const visualizeButton = addSelectorEvent('#visualize', event => {
+function initializeButtonEvents() {
+  addHtmlEvent([visualizeButton], event => {
     const element = event.target as HTMLElement;
     const { isSuccessful, nodesToAnimate } = board.start(
       visualizerState.algorithm
@@ -56,7 +45,6 @@ function executeSequence() {
           } else if (animationIndex === nodesToAnimate.length - 1) {
             element.classList.remove('loading');
             element.innerText = buttonText;
-
             alert('Node is found!');
           }
         }
@@ -64,13 +52,19 @@ function executeSequence() {
     } else {
       alert("Can't find path");
     }
-  })[0];
+  });
 
-  addSelectorEvent('#clear', () => {
+  addHtmlEvent(getNodes('#clear-board'), () => {
     board.clearBoard();
   });
 
-  addSelectorEvent('.dropdown', event => {
+  addHtmlEvent(getNodes('#clear-walls'), () => {
+    board.clearWalls();
+  });
+}
+
+function initializeDropdownEvents() {
+  addHtmlEvent(getNodes('.dropdown'), event => {
     const node = event.currentTarget as HTMLElement;
     if (node.classList.contains('open')) {
       node.classList.remove('open');
@@ -79,7 +73,7 @@ function executeSequence() {
     }
   });
 
-  addSelectorEvent('.dropdown-item', event => {
+  addHtmlEvent(getNodes('.dropdown-item'), event => {
     const node = event.currentTarget as HTMLElement;
     if (node.id === 'dfs-algorithm') {
       visualizerState.setAlgorithm('dfs');
@@ -102,23 +96,5 @@ function executeSequence() {
   });
 }
 
-function addSelectorEvent(
-  selector: string,
-  callback: (element: Event) => void
-) {
-  const nodes = document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
-  nodes.forEach(eachNode => eachNode.addEventListener('click', callback));
-  return nodes;
-}
-
-function changeDropdownLabel(node: HTMLElement, text: string) {
-  const controls = node.parentElement?.parentElement?.querySelector(
-    '.dropdown-controls'
-  ) as HTMLElement | undefined | null;
-  if (!controls) {
-    return;
-  }
-  controls.innerText = text;
-}
-
-executeSequence();
+initializeButtonEvents();
+initializeDropdownEvents();
