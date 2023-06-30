@@ -1,13 +1,21 @@
-import startAnimations from './animate';
 import Board from './board';
+import Timer from './timer';
+import startAnimations from './animate';
 import { NODE_MAPPING, SPEED_MAPPING } from './constants';
 import { AlgorithmType, SpeedType } from './types';
 import { addHtmlEvent, changeDropdownLabel, getNodes } from './utils';
 
+const boardNode = document.querySelector('#board') as HTMLElement;
+const board = new Board(boardNode);
+const visualizeButton = getNodes(NODE_MAPPING.visualizeButton)[0];
+const playPauseButton = getNodes(NODE_MAPPING.playPauseButton)[0];
+
 class VisualizerState {
   algorithm: AlgorithmType;
   speed: SpeedType;
-  timers: Array<NodeJS.Timeout>;
+  timers: Array<Timer>;
+  hasStarted: boolean;
+  isPlaying: boolean;
 
   setAlgorithm(algorithm: AlgorithmType) {
     this.algorithm = algorithm;
@@ -21,19 +29,70 @@ class VisualizerState {
     return SPEED_MAPPING[this.speed].time;
   }
 
-  setTimers(_timers: Array<NodeJS.Timeout>) {
+  setTimers(_timers: Array<Timer>) {
     this.timers = _timers;
   }
 
   clearTimers() {
-    this.timers.forEach(eachTimer => clearTimeout(eachTimer));
+    this.hasStarted = false;
+    this.timers.forEach(eachTimer => eachTimer.clear());
+    this.timers = [];
+  }
+
+  private resumeTimers() {
+    this.timers.forEach(eachTimer => eachTimer.resume());
+  }
+
+  private pauseTimers() {
+    this.timers.forEach(eachTimer => eachTimer.pause());
+  }
+
+  setStarted(hasStarted: boolean) {
+    this.hasStarted = hasStarted;
+    if (this.hasStarted) {
+      this.isPlaying = true;
+    }
+  }
+
+  private calculateNewDomState() {
+    playPauseButton.innerText = this.isPlaying ? 'Pause' : 'Resume';
+    if (playPauseButton instanceof HTMLButtonElement) {
+      playPauseButton.disabled = !this.hasStarted;
+    }
+  }
+
+  startOrStopTimer(newState: boolean) {
+    this.isPlaying = newState;
+    this.calculateNewDomState();
+  }
+
+  playOrPauseTimer() {
+    this.isPlaying = !this.isPlaying;
+    if (this.isPlaying) {
+      this.resumeTimers();
+    } else {
+      this.pauseTimers();
+    }
+    this.calculateNewDomState();
   }
 }
 
 const visualizerState = new VisualizerState();
-const boardNode = document.querySelector('#board') as HTMLElement;
-const board = new Board(boardNode);
-const visualizeButton = getNodes(NODE_MAPPING.visualizeButton)[0];
+
+function onIndexAnimated(
+  animatedIndex: number,
+  nodesToAnimate: Array<unknown>
+) {
+  visualizerState.timers.shift();
+  if (animatedIndex === 0) {
+    visualizerState.setStarted(true);
+    visualizerState.startOrStopTimer(true);
+  }
+  if (animatedIndex === nodesToAnimate.length - 1) {
+    visualizerState.setStarted(false);
+    visualizerState.startOrStopTimer(false);
+  }
+}
 
 function initializeButtonEvents() {
   addHtmlEvent([visualizeButton], () => {
@@ -47,25 +106,29 @@ function initializeButtonEvents() {
 
     const timers = startAnimations(
       nodesToAnimate,
-      visualizerState.getTimeForSpeed()
+      visualizerState.getTimeForSpeed(),
+      index => onIndexAnimated(index, nodesToAnimate)
     );
     visualizerState.setTimers(timers);
   });
 
   addHtmlEvent(getNodes('#clear-board'), () => {
     board.clearBoard();
+    visualizerState.clearTimers();
   });
 
   addHtmlEvent(getNodes('#clear-walls'), () => {
     board.clearWalls();
+    visualizerState.clearTimers();
   });
 
   addHtmlEvent(getNodes('#clear-path'), () => {
     board.clearPath();
+    visualizerState.clearTimers();
   });
 
-  addHtmlEvent(getNodes('#play-pause'), () => {
-    visualizerState.clearTimers();
+  addHtmlEvent([playPauseButton], () => {
+    visualizerState.playOrPauseTimer();
   });
 }
 

@@ -1,4 +1,5 @@
 import Node from './node';
+import Timer from './timer';
 
 function startTimer(
   nodesToAnimate: Array<Node>,
@@ -6,7 +7,7 @@ function startTimer(
   time: number,
   callback?: (animationIndex: number) => void
 ) {
-  return setTimeout(() => {
+  return new Timer(() => {
     const node = nodesToAnimate[index];
     const currentElement = document.getElementById(node.id);
     if (!currentElement) {
@@ -35,7 +36,7 @@ function startAnimations(
   speed: number,
   callback?: (animationIndex: number) => void
 ) {
-  const timers: Array<NodeJS.Timeout> = [];
+  const timers: Array<Timer> = [];
 
   for (let i = 0; i < nodesToAnimate.length; i++) {
     timers.push(startTimer(nodesToAnimate, i, (i + 1) * speed, callback));

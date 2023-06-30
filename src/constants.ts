@@ -23,4 +23,5 @@ export const SPEED_MAPPING: Record<
 
 export const NODE_MAPPING = Object.freeze({
   visualizeButton: '#visualize',
+  playPauseButton: '#play-pause',
 });
