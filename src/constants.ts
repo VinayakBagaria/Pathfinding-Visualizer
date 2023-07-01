@@ -51,7 +51,7 @@ export const WALKTHROUGH_POSITIONS = [
     left: 0,
     title: 'Pick an algorithm',
     description: 'Choose any traversal algorithm from this menu.',
-    image: '/public/algorithm-selector.png',
+    image: './public/algorithm-selector.png',
   },
   {
     reference: '.start',
