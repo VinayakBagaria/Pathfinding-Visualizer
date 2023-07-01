@@ -24,8 +24,9 @@ function startTimer(
       currentElement.classList.add('shortest-path');
     }
 
-    if (index >= 1 && animationType === 'travel') {
-      const previous = nodesToAnimate[index - 1];
+    const { previous } = node;
+
+    if (animationType === 'travel' && previous !== null) {
       const previousElement = document.getElementById(previous.id);
       if (!previousElement) {
         throw new Error('Unfound node');
