@@ -7,17 +7,17 @@ import {
 import showModal from './modal';
 import { setUpWalkthrough, reInitiateWalkthrough } from './walkthrough';
 import {
-  NODE_TO_ID_MAPPING,
-  SPEED_MAPPING,
-  ALGORITHM_MAPPING,
-} from './constants';
-import { AlgorithmType, SpeedType } from './types';
-import {
   addHtmlEvent,
   changeDropdownLabel,
   getNodes,
   getNodeById,
 } from './utils';
+import {
+  NODE_TO_ID_MAPPING,
+  SPEED_MAPPING,
+  ALGORITHM_MAPPING,
+} from './constants';
+import { AlgorithmType, SpeedType } from './types';
 
 const boardNode = getNodeById(NODE_TO_ID_MAPPING.board);
 const board = new Board(boardNode);
@@ -39,8 +39,30 @@ class VisualizerState {
     this.algorithm = algorithm;
   }
 
-  setSpeed(speed: SpeedType) {
-    this.speed = speed;
+  setSpeed(newSpeed: SpeedType) {
+    if (this.speed === newSpeed) {
+      return;
+    }
+
+    if (typeof this.speed === 'undefined') {
+      this.speed = newSpeed;
+      return;
+    }
+
+    const visitedDifference =
+      SPEED_MAPPING[newSpeed].time / SPEED_MAPPING[this.speed].time;
+    const pathDifference =
+      SPEED_MAPPING[newSpeed].pathTime / SPEED_MAPPING[this.speed].pathTime;
+
+    for (const timer of this.timers) {
+      if (timer.animationType === 'shortest-path') {
+        timer.setRemainingByFactor(pathDifference);
+      } else if (timer.animationType === 'travel') {
+        timer.setRemainingByFactor(visitedDifference);
+      }
+    }
+
+    this.speed = newSpeed;
   }
 
   appendTimers(_timers: Array<Timer>) {
@@ -142,18 +164,16 @@ function calculateAndLaunchAnimations() {
     return;
   }
 
-  const speed = visualizerState.speed;
-
   const visitedTimers = startVisitedNodesAnimations(
     nodesToAnimate,
-    speed,
+    visualizerState.speed,
     animatedIndex => {
       onIndexAnimated(animatedIndex);
       if (animatedIndex === nodesToAnimate.length - 1) {
         const pathTimers = startShortestPathAnimation(
           endNode,
           board.nodeMap,
-          speed,
+          visualizerState.speed,
           index => onPathAnimated(index, pathTimers)
         );
         visualizerState.appendTimers(pathTimers);

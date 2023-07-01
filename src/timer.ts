@@ -1,14 +1,23 @@
+import { SPEED_MAPPING } from './constants';
+import { AnimationType } from './types';
+
 class Timer {
   id: NodeJS.Timeout;
   start: number;
   remaining: number;
   callback: () => void;
+  animationType: AnimationType;
 
-  constructor(callback: () => void, delay: number) {
+  constructor(
+    callback: () => void,
+    delay: number,
+    animationType: AnimationType
+  ) {
     this.start = Date.now();
     this.remaining = delay;
     this.callback = callback;
     this.id = setTimeout(this.callback, delay);
+    this.animationType = animationType;
   }
 
   pause() {
@@ -24,6 +33,10 @@ class Timer {
 
   clear() {
     clearTimeout(this.id);
+  }
+
+  setRemainingByFactor(factor: number) {
+    this.remaining *= factor;
   }
 }
 

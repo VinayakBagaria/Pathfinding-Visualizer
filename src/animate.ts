@@ -1,42 +1,46 @@
 import Node from './node';
 import Timer from './timer';
 import { SPEED_MAPPING } from './constants';
-import { SpeedType } from './types';
+import { SpeedType, AnimationType } from './types';
 
 function startTimer(
   nodesToAnimate: Array<Node>,
   index: number,
   time: number,
-  animationType: 'travel' | 'shortest-path',
+  animationType: AnimationType,
   callback?: (animationIndex: number) => void
 ) {
-  return new Timer(() => {
-    const node = nodesToAnimate[index];
-    const currentElement = document.getElementById(node.id);
-    if (!currentElement) {
-      throw new Error('Unfound node');
-    }
-
-    currentElement.classList.remove('unvisited');
-    if (animationType === 'travel') {
-      currentElement.classList.add('current');
-    } else {
-      currentElement.classList.add('shortest-path');
-    }
-
-    if (animationType === 'travel' && index >= 1) {
-      const previous = nodesToAnimate[index - 1];
-      const previousElement = document.getElementById(previous.id);
-      if (!previousElement) {
+  return new Timer(
+    () => {
+      const node = nodesToAnimate[index];
+      const currentElement = document.getElementById(node.id);
+      if (!currentElement) {
         throw new Error('Unfound node');
       }
 
-      previousElement.classList.remove('current');
-      previousElement.classList.add('visited');
-    }
+      currentElement.classList.remove('unvisited');
+      if (animationType === 'travel') {
+        currentElement.classList.add('current');
+      } else {
+        currentElement.classList.add('shortest-path');
+      }
 
-    callback?.(index);
-  }, time);
+      if (animationType === 'travel' && index >= 1) {
+        const previous = nodesToAnimate[index - 1];
+        const previousElement = document.getElementById(previous.id);
+        if (!previousElement) {
+          throw new Error('Unfound node');
+        }
+
+        previousElement.classList.remove('current');
+        previousElement.classList.add('visited');
+      }
+
+      callback?.(index);
+    },
+    time,
+    animationType
+  );
 }
 
 export function startVisitedNodesAnimations(
