@@ -24,7 +24,7 @@ function startTimer(
       currentElement.classList.add('shortest-path');
     }
 
-    if (index >= 1 && animationType === 'travel') {
+    if (animationType === 'travel' && index >= 1) {
       const previous = nodesToAnimate[index - 1];
       const previousElement = document.getElementById(previous.id);
       if (!previousElement) {

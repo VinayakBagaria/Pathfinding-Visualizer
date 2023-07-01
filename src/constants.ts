@@ -50,12 +50,13 @@ export const WALKTHROUGH_POSITIONS = [
     top: 25,
     left: 0,
     title: 'Pick an algorithm',
-    description: 'Choose an algorithm from this menu.',
+    description: 'Choose any traversal algorithm from this menu.',
+    image: '/public/algorithm-selector.png',
   },
   {
     reference: '.start',
-    top: 0,
-    left: 200,
+    top: -150,
+    left: 100,
     title: 'Add walls',
     description: 'Click on the grid to add a wall. A path cannot cross a wall.',
   },
@@ -76,11 +77,11 @@ export const WALKTHROUGH_POSITIONS = [
       'You can start the visualization, pause/resume it in between, adjust the visualization speed, clear the board from the controls panel here.',
   },
   {
-    reference: '#page-title',
+    reference: '#walkthrough-tutorial',
     top: 30,
-    left: 0,
+    left: -275,
     title: 'Revisit',
-    description:
-      'If you want to see this tutorial again, click on this title again.',
+    description: 'If you want to see this tutorial again, click on this icon.',
+    direction: 'rtl',
   },
 ];

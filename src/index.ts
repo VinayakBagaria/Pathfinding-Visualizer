@@ -32,7 +32,7 @@ class VisualizerState {
   algorithm: AlgorithmType | null = null;
   speed: SpeedType;
   timers: Array<Timer> = [];
-  hasStarted: boolean;
+  boardStatus: 'started' | 'completed' | null = null;
   isPlaying: boolean;
 
   setAlgorithm(algorithm: AlgorithmType) {
@@ -60,21 +60,37 @@ class VisualizerState {
     this.timers.forEach(eachTimer => eachTimer.pause());
   }
 
-  setStarted(hasStarted: boolean) {
-    this.hasStarted = hasStarted;
-    if (this.hasStarted) {
+  setBoardStatus(newBoardStatus: 'started' | 'completed' | null) {
+    this.boardStatus = newBoardStatus;
+    if (this.boardStatus === 'started') {
       this.isPlaying = true;
     } else {
       this.clearTimers();
       this.calculateNewDomState();
     }
 
-    visualizeButton.disabled = this.hasStarted;
+    visualizeButton.disabled =
+      this.algorithm === null || this.boardStatus === 'started';
   }
 
   private calculateNewDomState() {
-    playPauseButton.innerText = this.isPlaying ? 'Pause' : 'Resume';
-    playPauseButton.disabled = !this.hasStarted;
+    if (this.algorithm === null || this.boardStatus === null) {
+      playPauseButton.disabled = true;
+      return;
+    }
+
+    playPauseButton.disabled = false;
+
+    if (this.isPlaying) {
+      playPauseButton.innerText = 'Pause';
+      playPauseButton.dataset.playstate = 'pause';
+    } else if (this.boardStatus === 'started') {
+      playPauseButton.innerText = 'Resume';
+      playPauseButton.dataset.playstate = 'resume';
+    } else if (this.boardStatus === 'completed') {
+      playPauseButton.innerText = 'Revisualize';
+      playPauseButton.dataset.playstate = 'revisualize';
+    }
   }
 
   startOrStopTimer(newState: boolean) {
@@ -98,7 +114,7 @@ const visualizerState = new VisualizerState();
 function onIndexAnimated(animatedIndex: number) {
   visualizerState.timers.shift();
   if (animatedIndex === 0) {
-    visualizerState.setStarted(true);
+    visualizerState.setBoardStatus('started');
     visualizerState.startOrStopTimer(true);
   }
 }
@@ -106,75 +122,79 @@ function onIndexAnimated(animatedIndex: number) {
 function onPathAnimated(animatedIndex: number, nodesToAnimate: Array<unknown>) {
   visualizerState.timers.shift();
   if (animatedIndex === nodesToAnimate.length - 1) {
-    visualizerState.setStarted(false);
+    visualizerState.setBoardStatus('completed');
     visualizerState.startOrStopTimer(false);
   }
 }
 
+function calculateAndLaunchAnimations() {
+  if (visualizerState.algorithm === null) {
+    return;
+  }
+
+  const { endNode, nodesToAnimate } = board.start(visualizerState.algorithm);
+
+  if (endNode === null) {
+    showModal(
+      'Error!',
+      'Cannot find path to goal as we got blocked by walls. Kindly re-try.'
+    );
+    return;
+  }
+
+  const speed = visualizerState.speed;
+
+  const visitedTimers = startVisitedNodesAnimations(
+    nodesToAnimate,
+    speed,
+    animatedIndex => {
+      onIndexAnimated(animatedIndex);
+      if (animatedIndex === nodesToAnimate.length - 1) {
+        const pathTimers = startShortestPathAnimation(
+          endNode,
+          board.nodeMap,
+          speed,
+          index => onPathAnimated(index, pathTimers)
+        );
+        visualizerState.appendTimers(pathTimers);
+      }
+    }
+  );
+
+  visualizerState.appendTimers(visitedTimers);
+}
+
 function initializeButtonEvents() {
   addHtmlEvent(visualizeButton, () => {
-    if (visualizerState.algorithm === null) {
-      return;
-    }
-
-    const { endNode, nodesToAnimate } = board.start(visualizerState.algorithm);
-
-    if (endNode === null) {
-      showModal(
-        'Error!',
-        'Cannot find path to goal as we got blocked by walls. Kindly re-try.'
-      );
-      return;
-    }
-
-    const speed = visualizerState.speed;
-
-    const visitedTimers = startVisitedNodesAnimations(
-      nodesToAnimate,
-      speed,
-      animatedIndex => {
-        onIndexAnimated(animatedIndex);
-        if (animatedIndex === nodesToAnimate.length - 1) {
-          const pathTimers = startShortestPathAnimation(
-            endNode,
-            board.nodeMap,
-            speed,
-            index => onPathAnimated(index, pathTimers)
-          );
-          visualizerState.appendTimers(pathTimers);
-        }
-      }
-    );
-
-    visualizerState.appendTimers(visitedTimers);
+    calculateAndLaunchAnimations();
   });
 
-  getNodes('#clear-board').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearBoard();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-board'), () => {
+    board.clearBoard();
+    visualizerState.setBoardStatus(null);
+  });
 
-  getNodes('#clear-walls').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearWalls();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-walls'), () => {
+    board.clearWalls();
+    visualizerState.setBoardStatus(null);
+  });
 
-  getNodes('#clear-path').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearPath();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-path'), () => {
+    board.clearPath();
+    visualizerState.setBoardStatus(null);
+  });
 
   addHtmlEvent(playPauseButton, () => {
-    visualizerState.playOrPauseTimer();
+    if (playPauseButton.dataset.playstate === 'revisualize') {
+      board.clearPath();
+      visualizerState.setBoardStatus(null);
+      calculateAndLaunchAnimations();
+    } else {
+      visualizerState.playOrPauseTimer();
+    }
   });
 
-  addHtmlEvent(getNodeById('page-title'), () => {
+  addHtmlEvent(getNodeById('walkthrough-tutorial'), () => {
     reInitiateWalkthrough();
   });
 }
@@ -204,9 +224,6 @@ function initializeDropdownEvents() {
     })
   );
 
-  const allAlgorithmIds = Object.values(ALGORITHM_MAPPING).map(
-    eachValue => eachValue.id
-  );
   const allSpeedIds = Object.values(SPEED_MAPPING).map(
     eachValue => eachValue.id
   );
