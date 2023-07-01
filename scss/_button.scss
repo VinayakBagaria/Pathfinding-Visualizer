@@ -1,9 +1,9 @@
 button {
+  cursor: pointer;
   height: var(--controls-height);
   font-size: 14px;
   line-height: 24px;
   padding: 8px 24px;
-  cursor: pointer;
   border: 0;
   border-radius: 4px;
 
@@ -20,23 +20,38 @@ button {
 
 button.outlined {
   background-color: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--text-primary);
+  color: var(--disabled-color);
+  border: 1px solid var(--disabled-color);
 
   &:disabled,
   &[disabled='disabled'] {
-    color: var(--disabled-color);
-    border-color: var(--disabled-color);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+  }
+
+  &.dark {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+
+    &:disabled,
+    &[disabled='disabled'] {
+      color: var(--disabled-color);
+      border-color: var(--disabled-color);
+    }
   }
 }
 
 button.ghost {
   background-color: transparent;
-  color: var(--text-primary);
+  color: var(--disabled-color);
   border: 1px solid transparent;
 
   &:hover {
     background-color: rgba(215, 218, 220, 0.1);
     border-color: var(--border-color);
+  }
+
+  &.dark {
+    color: var(--text-primary);
   }
 }

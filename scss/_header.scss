@@ -10,28 +10,33 @@ header {
   }
 }
 
-#page-title {
-  cursor: pointer;
+.page-title {
   position: absolute;
   left: var(--horizontal-padding);
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 20px;
   font-weight: 400;
   line-height: 26px;
   letter-spacing: 0.2px;
   color: var(--text-primary);
+}
+
+#walkthrough-tutorial {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: var(--horizontal-padding);
+  cursor: pointer;
   opacity: 1;
   transition: opacity 0.4s ease;
 
   &:hover {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
 .action-buttons {
-  flex: 1;
-  display: flex;
-  align-items: center;
-
   > * {
     margin-right: 16px;
   }

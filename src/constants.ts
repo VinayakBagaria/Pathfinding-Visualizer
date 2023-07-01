@@ -50,7 +50,8 @@ export const WALKTHROUGH_POSITIONS = [
     top: 25,
     left: 0,
     title: 'Pick an algorithm',
-    description: 'Choose an algorithm from this menu.',
+    description: 'Choose any traversal algorithm from this menu.',
+    image: '/public/algorithm-selector.png',
   },
   {
     reference: '.start',
@@ -76,7 +77,7 @@ export const WALKTHROUGH_POSITIONS = [
       'You can start the visualization, pause/resume it in between, adjust the visualization speed, clear the board from the controls panel here.',
   },
   {
-    reference: '#page-title',
+    reference: '#walkthrough-tutorial',
     top: 30,
     left: 0,
     title: 'Revisit',

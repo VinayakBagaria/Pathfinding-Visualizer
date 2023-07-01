@@ -26,6 +26,14 @@ function goToIndex() {
   }`;
   getNodeById('walkthrough-title').innerText = currentStep.title;
   getNodeById('walkthrough-description').innerText = currentStep.description;
+
+  const imageNode = getNodeById('walkthrough-image');
+  if (currentStep.image) {
+    imageNode.classList.add('valid');
+    imageNode.style.backgroundImage = `url(${currentStep.image})`;
+  } else {
+    imageNode.classList.remove('valid');
+  }
 }
 
 export function reInitiateWalkthrough() {
@@ -34,7 +42,7 @@ export function reInitiateWalkthrough() {
 }
 
 export function setUpWalkthrough() {
-  setTimeout(() => reInitiateWalkthrough(), 600);
+  // setTimeout(() => reInitiateWalkthrough(), 600);
 
   addHtmlEvent(getNodeById('walkthrough-skip'), () => {
     currentIndex = -1;

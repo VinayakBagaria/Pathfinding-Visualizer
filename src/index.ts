@@ -69,10 +69,14 @@ class VisualizerState {
       this.calculateNewDomState();
     }
 
-    visualizeButton.disabled = this.hasStarted;
+    visualizeButton.disabled = this.hasStarted || this.algorithm === null;
   }
 
   private calculateNewDomState() {
+    if (this.algorithm === null) {
+      return;
+    }
+
     playPauseButton.innerText = this.isPlaying ? 'Pause' : 'Resume';
     playPauseButton.disabled = !this.hasStarted;
   }
@@ -149,32 +153,26 @@ function initializeButtonEvents() {
     visualizerState.appendTimers(visitedTimers);
   });
 
-  getNodes('#clear-board').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearBoard();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-board'), () => {
+    board.clearBoard();
+    visualizerState.setStarted(false);
+  });
 
-  getNodes('#clear-walls').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearWalls();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-walls'), () => {
+    board.clearWalls();
+    visualizerState.setStarted(false);
+  });
 
-  getNodes('#clear-path').forEach(eachNode =>
-    addHtmlEvent(eachNode, () => {
-      board.clearPath();
-      visualizerState.setStarted(false);
-    })
-  );
+  addHtmlEvent(getNodeById('clear-path'), () => {
+    board.clearPath();
+    visualizerState.setStarted(false);
+  });
 
   addHtmlEvent(playPauseButton, () => {
     visualizerState.playOrPauseTimer();
   });
 
-  addHtmlEvent(getNodeById('page-title'), () => {
+  addHtmlEvent(getNodeById('walkthrough-tutorial'), () => {
     reInitiateWalkthrough();
   });
 }
@@ -204,9 +202,6 @@ function initializeDropdownEvents() {
     })
   );
 
-  const allAlgorithmIds = Object.values(ALGORITHM_MAPPING).map(
-    eachValue => eachValue.id
-  );
   const allSpeedIds = Object.values(SPEED_MAPPING).map(
     eachValue => eachValue.id
   );
