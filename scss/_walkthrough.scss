@@ -27,6 +27,13 @@
     border-bottom-width: 8px;
     border-bottom-style: solid;
   }
+
+  &[data-direction='ltr']::after {
+    left: 24px;
+  }
+  &[data-direction='rtl']::after {
+    right: 24px;
+  }
 }
 
 #walkthrough-image {

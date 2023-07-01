@@ -36,8 +36,6 @@ header {
   }
 }
 
-.action-buttons {
-  > * {
-    margin-right: 16px;
-  }
+.action-buttons > * {
+  margin-right: 16px;
 }

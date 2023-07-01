@@ -55,8 +55,8 @@ export const WALKTHROUGH_POSITIONS = [
   },
   {
     reference: '.start',
-    top: 0,
-    left: 200,
+    top: -150,
+    left: 100,
     title: 'Add walls',
     description: 'Click on the grid to add a wall. A path cannot cross a wall.',
   },
@@ -79,9 +79,9 @@ export const WALKTHROUGH_POSITIONS = [
   {
     reference: '#walkthrough-tutorial',
     top: 30,
-    left: 0,
+    left: -275,
     title: 'Revisit',
-    description:
-      'If you want to see this tutorial again, click on this title again.',
+    description: 'If you want to see this tutorial again, click on this icon.',
+    direction: 'rtl',
   },
 ];

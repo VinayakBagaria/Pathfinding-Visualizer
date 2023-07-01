@@ -34,6 +34,8 @@ function goToIndex() {
   } else {
     imageNode.classList.remove('valid');
   }
+
+  containerNode.dataset.direction = currentStep.direction ?? 'ltr';
 }
 
 export function reInitiateWalkthrough() {
@@ -42,7 +44,7 @@ export function reInitiateWalkthrough() {
 }
 
 export function setUpWalkthrough() {
-  // setTimeout(() => reInitiateWalkthrough(), 600);
+  setTimeout(() => reInitiateWalkthrough(), 600);
 
   addHtmlEvent(getNodeById('walkthrough-skip'), () => {
     currentIndex = -1;
@@ -54,6 +56,15 @@ export function setUpWalkthrough() {
     if (currentIndex === WALKTHROUGH_POSITIONS.length) {
       currentIndex = -1;
     }
+
+    const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
+    getNodeById('walkthrough-skip').style.visibility = isLastPosition
+      ? 'hidden'
+      : 'visible';
+    getNodeById('walkthrough-next').innerText = isLastPosition
+      ? 'Finish!'
+      : 'Next';
+
     goToIndex();
   });
 }
