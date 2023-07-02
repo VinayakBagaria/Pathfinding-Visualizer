@@ -64,11 +64,13 @@ export const WALKTHROUGH_POSITIONS = [
   },
   {
     reference: '.start',
-    top: 10,
-    left: -20,
+    top: -150,
+    left: 50,
     title: 'Drag nodes',
     description:
       'You can drag the start and end target to any place in the grid.',
+    image: './public/start-end-drag.gif',
+    direction: 'left',
   },
   {
     reference: '#visualize',
@@ -84,6 +86,6 @@ export const WALKTHROUGH_POSITIONS = [
     left: -275,
     title: 'Revisit',
     description: 'If you want to see this tutorial again, click on this icon.',
-    direction: 'rtl',
+    direction: 'top-right',
   },
 ];

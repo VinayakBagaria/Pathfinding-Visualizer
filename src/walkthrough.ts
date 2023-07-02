@@ -50,7 +50,8 @@ function goToIndex() {
     imageNode.classList.remove('valid');
   }
 
-  containerNode.dataset.direction = currentStep.direction ?? 'ltr';
+  getNodeById('walkthrough-arrow').dataset.direction =
+    currentStep.direction ?? 'top-left';
 }
 
 export function reInitiateWalkthrough() {
