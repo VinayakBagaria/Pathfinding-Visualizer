@@ -1,5 +1,8 @@
 import { getNodes, getNodeById, addHtmlEvent } from './utils';
-import { WALKTHROUGH_POSITIONS } from './constants';
+import {
+  WALKTHROUGH_COUNTER_STORAGE_KEY,
+  WALKTHROUGH_POSITIONS,
+} from './constants';
 
 let currentIndex = 0;
 
@@ -60,7 +63,9 @@ export function reInitiateWalkthrough() {
 }
 
 export function setUpWalkthrough() {
-  setTimeout(() => reInitiateWalkthrough(), 600);
+  if (!localStorage.getItem(WALKTHROUGH_COUNTER_STORAGE_KEY)) {
+    setTimeout(() => reInitiateWalkthrough(), 600);
+  }
 
   addHtmlEvent(getNodeById('walkthrough-skip'), () => {
     currentIndex = -1;
@@ -70,6 +75,7 @@ export function setUpWalkthrough() {
   addHtmlEvent(getNodeById('walkthrough-next'), () => {
     currentIndex += 1;
     if (currentIndex === WALKTHROUGH_POSITIONS.length) {
+      localStorage.setItem(WALKTHROUGH_COUNTER_STORAGE_KEY, '1');
       currentIndex = -1;
     }
     goToIndex();

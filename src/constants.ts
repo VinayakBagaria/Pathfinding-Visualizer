@@ -90,3 +90,5 @@ export const WALKTHROUGH_POSITIONS = [
     direction: 'top-right',
   },
 ];
+
+export const WALKTHROUGH_COUNTER_STORAGE_KEY = 'walkthroughCounter';
