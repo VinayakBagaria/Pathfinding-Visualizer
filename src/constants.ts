@@ -58,7 +58,9 @@ export const WALKTHROUGH_POSITIONS = [
     top: -150,
     left: 100,
     title: 'Add walls',
-    description: 'Click on the grid to add a wall. A path cannot cross a wall.',
+    description:
+      'Drag on the grid to add walls. A path will not be able to cross a wall.',
+    image: './public/walls.gif',
   },
   {
     reference: '.start',
