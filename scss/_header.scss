@@ -22,20 +22,30 @@ header {
   color: var(--text-primary);
 }
 
-#walkthrough-tutorial {
+.header-right-side {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   right: var(--horizontal-padding);
+}
+
+#walkthrough-tutorial {
   cursor: pointer;
   opacity: 1;
   transition: opacity 0.4s ease;
+  margin-right: 24px;
 
   &:hover {
     opacity: 0.8;
   }
 }
 
+#source-link img {
+  height: 28px;
+  width: 28px;
+  border-radius: 100%;
+}
+
 .action-buttons > * {
-  margin-right: 16px;
+  margin-right: 20px;
 }

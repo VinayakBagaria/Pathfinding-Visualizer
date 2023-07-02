@@ -1,4 +1,5 @@
 #walkthrough-overlay {
+  z-index: 2;
   background-color: rgba(25, 25, 25, 0.4);
   opacity: 0;
   pointer-events: none;
@@ -17,22 +18,33 @@
   background-color: #1a1e3e;
   border-radius: 12px;
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: -7px;
-    border-color: #1a1e3e;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom-width: 8px;
-    border-bottom-style: solid;
+  &.with-transition {
+    transition: transform 0.3s ease;
   }
+}
 
-  &[data-direction='ltr']::after {
+#walkthrough-arrow {
+  position: absolute;
+  border-color: #1a1e3e;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom-width: 8px;
+  border-bottom-style: solid;
+
+  &[data-direction='top-left'] {
+    top: -7px;
     left: 24px;
   }
-  &[data-direction='rtl']::after {
+
+  &[data-direction='top-right'] {
+    top: -7px;
     right: 24px;
+  }
+
+  &[data-direction='left'] {
+    top: 28%;
+    left: -12px;
+    transform: rotate(-90deg);
   }
 }
 

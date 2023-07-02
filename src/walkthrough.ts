@@ -1,5 +1,8 @@
 import { getNodes, getNodeById, addHtmlEvent } from './utils';
-import { WALKTHROUGH_POSITIONS } from './constants';
+import {
+  WALKTHROUGH_COUNTER_STORAGE_KEY,
+  WALKTHROUGH_POSITIONS,
+} from './constants';
 
 let currentIndex = 0;
 
@@ -11,15 +14,30 @@ function goToIndex() {
   }
 
   overlayNode.classList.add('open');
-  const containerNode = getNodeById('walkthrough-container');
+  const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
+  getNodeById('walkthrough-skip').style.visibility = isLastPosition
+    ? 'hidden'
+    : 'visible';
+  getNodeById('walkthrough-next').innerText = isLastPosition
+    ? 'Finish!'
+    : 'Next';
 
   const currentStep = WALKTHROUGH_POSITIONS[currentIndex];
+  const referencePosition = getNodes(
+    currentStep.reference
+  )[0].getBoundingClientRect();
 
-  const positions = getNodes(currentStep.reference)[0].getBoundingClientRect();
-  containerNode.style.top = `${
-    positions.y + positions.height + currentStep.top
-  }px`;
-  containerNode.style.left = `${positions.x + currentStep.left}px`;
+  const containerNode = getNodeById('walkthrough-container');
+
+  const xDisplacement = referencePosition.x + currentStep.left;
+  const yDisplacement =
+    referencePosition.y + referencePosition.height + currentStep.top;
+  containerNode.style.transform = `translate(${xDisplacement}px, ${yDisplacement}px)`;
+  if (currentIndex > 0) {
+    containerNode.classList.add('with-transition');
+  } else {
+    containerNode.classList.remove('with-transition');
+  }
 
   getNodeById('walkthrough-stepper').innerText = `${currentIndex + 1} of ${
     WALKTHROUGH_POSITIONS.length
@@ -35,7 +53,8 @@ function goToIndex() {
     imageNode.classList.remove('valid');
   }
 
-  containerNode.dataset.direction = currentStep.direction ?? 'ltr';
+  getNodeById('walkthrough-arrow').dataset.direction =
+    currentStep.direction ?? 'top-left';
 }
 
 export function reInitiateWalkthrough() {
@@ -44,7 +63,9 @@ export function reInitiateWalkthrough() {
 }
 
 export function setUpWalkthrough() {
-  setTimeout(() => reInitiateWalkthrough(), 600);
+  if (!localStorage.getItem(WALKTHROUGH_COUNTER_STORAGE_KEY)) {
+    setTimeout(() => reInitiateWalkthrough(), 600);
+  }
 
   addHtmlEvent(getNodeById('walkthrough-skip'), () => {
     currentIndex = -1;
@@ -54,17 +75,9 @@ export function setUpWalkthrough() {
   addHtmlEvent(getNodeById('walkthrough-next'), () => {
     currentIndex += 1;
     if (currentIndex === WALKTHROUGH_POSITIONS.length) {
+      localStorage.setItem(WALKTHROUGH_COUNTER_STORAGE_KEY, '1');
       currentIndex = -1;
     }
-
-    const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
-    getNodeById('walkthrough-skip').style.visibility = isLastPosition
-      ? 'hidden'
-      : 'visible';
-    getNodeById('walkthrough-next').innerText = isLastPosition
-      ? 'Finish!'
-      : 'Next';
-
     goToIndex();
   });
 }

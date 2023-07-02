@@ -51,22 +51,26 @@ export const WALKTHROUGH_POSITIONS = [
     left: 0,
     title: 'Pick an algorithm',
     description: 'Choose any traversal algorithm from this menu.',
-    image: './public/algorithm-selector.png',
+    image: './public/algorithm-selector.gif',
   },
   {
     reference: '.start',
     top: -150,
     left: 100,
     title: 'Add walls',
-    description: 'Click on the grid to add a wall. A path cannot cross a wall.',
+    description:
+      'Drag on the grid to add walls. A path will not be able to cross a wall.',
+    image: './public/walls.gif',
   },
   {
     reference: '.start',
-    top: 10,
-    left: -20,
+    top: -150,
+    left: 50,
     title: 'Drag nodes',
     description:
-      'You can drag the start and end target to any place in the grid.',
+      'You can drag the start and end nodes to any place in the grid.',
+    image: './public/start-end-drag.gif',
+    direction: 'left',
   },
   {
     reference: '#visualize',
@@ -75,6 +79,7 @@ export const WALKTHROUGH_POSITIONS = [
     title: 'Controls',
     description:
       'You can start the visualization, pause/resume it in between, adjust the visualization speed, clear the board from the controls panel here.',
+    image: './public/controls-help.gif',
   },
   {
     reference: '#walkthrough-tutorial',
@@ -82,6 +87,8 @@ export const WALKTHROUGH_POSITIONS = [
     left: -275,
     title: 'Revisit',
     description: 'If you want to see this tutorial again, click on this icon.',
-    direction: 'rtl',
+    direction: 'top-right',
   },
 ];
+
+export const WALKTHROUGH_COUNTER_STORAGE_KEY = 'walkthroughCounter';
