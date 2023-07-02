@@ -68,7 +68,7 @@ export const WALKTHROUGH_POSITIONS = [
     left: 50,
     title: 'Drag nodes',
     description:
-      'You can drag the start and end target to any place in the grid.',
+      'You can drag the start and end nodes to any place in the grid.',
     image: './public/start-end-drag.gif',
     direction: 'left',
   },
