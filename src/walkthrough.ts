@@ -57,13 +57,15 @@ export function setUpWalkthrough() {
       currentIndex = -1;
     }
 
-    const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
-    getNodeById('walkthrough-skip').style.visibility = isLastPosition
-      ? 'hidden'
-      : 'visible';
-    getNodeById('walkthrough-next').innerText = isLastPosition
-      ? 'Finish!'
-      : 'Next';
+    if (currentIndex !== -1) {
+      const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
+      getNodeById('walkthrough-skip').style.visibility = isLastPosition
+        ? 'hidden'
+        : 'visible';
+      getNodeById('walkthrough-next').innerText = isLastPosition
+        ? 'Finish!'
+        : 'Next';
+    }
 
     goToIndex();
   });
