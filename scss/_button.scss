@@ -6,6 +6,7 @@ button {
   padding: 8px 24px;
   border: 0;
   border-radius: 4px;
+  transition: color 0.2s ease;
 
   &:disabled,
   &[disabled='disabled'] {
@@ -23,10 +24,18 @@ button.outlined {
   color: var(--disabled-color);
   border: 1px solid var(--disabled-color);
 
+  &:hover {
+    color: rgba(#787c7e, 0.8);
+    border-color: rgba(#787c7e, 0.85);
+  }
+
   &:disabled,
   &[disabled='disabled'] {
-    color: var(--text-primary);
-    border-color: var(--text-primary);
+    &,
+    &:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
   }
 
   &.dark {
@@ -35,8 +44,11 @@ button.outlined {
 
     &:disabled,
     &[disabled='disabled'] {
-      color: var(--disabled-color);
-      border-color: var(--disabled-color);
+      &,
+      &:hover {
+        color: var(--disabled-color);
+        border-color: var(--disabled-color);
+      }
     }
   }
 }

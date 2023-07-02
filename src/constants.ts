@@ -79,6 +79,7 @@ export const WALKTHROUGH_POSITIONS = [
     title: 'Controls',
     description:
       'You can start the visualization, pause/resume it in between, adjust the visualization speed, clear the board from the controls panel here.',
+    image: './public/controls-help.gif',
   },
   {
     reference: '#walkthrough-tutorial',
