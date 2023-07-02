@@ -11,15 +11,30 @@ function goToIndex() {
   }
 
   overlayNode.classList.add('open');
-  const containerNode = getNodeById('walkthrough-container');
+  const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
+  getNodeById('walkthrough-skip').style.visibility = isLastPosition
+    ? 'hidden'
+    : 'visible';
+  getNodeById('walkthrough-next').innerText = isLastPosition
+    ? 'Finish!'
+    : 'Next';
 
   const currentStep = WALKTHROUGH_POSITIONS[currentIndex];
+  const referencePosition = getNodes(
+    currentStep.reference
+  )[0].getBoundingClientRect();
 
-  const positions = getNodes(currentStep.reference)[0].getBoundingClientRect();
-  containerNode.style.top = `${
-    positions.y + positions.height + currentStep.top
-  }px`;
-  containerNode.style.left = `${positions.x + currentStep.left}px`;
+  const containerNode = getNodeById('walkthrough-container');
+
+  const xDisplacement = referencePosition.x + currentStep.left;
+  const yDisplacement =
+    referencePosition.y + referencePosition.height + currentStep.top;
+  containerNode.style.transform = `translate(${xDisplacement}px, ${yDisplacement}px)`;
+  if (currentIndex > 0) {
+    containerNode.classList.add('with-transition');
+  } else {
+    containerNode.classList.remove('with-transition');
+  }
 
   getNodeById('walkthrough-stepper').innerText = `${currentIndex + 1} of ${
     WALKTHROUGH_POSITIONS.length
@@ -56,17 +71,6 @@ export function setUpWalkthrough() {
     if (currentIndex === WALKTHROUGH_POSITIONS.length) {
       currentIndex = -1;
     }
-
-    if (currentIndex !== -1) {
-      const isLastPosition = currentIndex === WALKTHROUGH_POSITIONS.length - 1;
-      getNodeById('walkthrough-skip').style.visibility = isLastPosition
-        ? 'hidden'
-        : 'visible';
-      getNodeById('walkthrough-next').innerText = isLastPosition
-        ? 'Finish!'
-        : 'Next';
-    }
-
     goToIndex();
   });
 }
